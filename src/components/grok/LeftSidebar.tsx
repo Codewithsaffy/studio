@@ -97,13 +97,15 @@ export function LeftSidebar() {
                 </Button>
             </CollapsibleTrigger>
           </div>
-          <div className="group-data-[collapsible=icon]:flex hidden p-2 justify-center">
-             <SidebarMenuButton tooltip="History" size="icon" className="w-auto" asChild>
-                <CollapsibleTrigger>
-                    <History />
-                </CollapsibleTrigger>
-            </SidebarMenuButton>
-          </div>
+           <SidebarMenu className="group-data-[collapsible=icon]:flex hidden">
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="History" size="icon" asChild>
+                    <CollapsibleTrigger>
+                        <History />
+                    </CollapsibleTrigger>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+          </SidebarMenu>
           <CollapsibleContent>
             <SidebarGroup className="group-data-[collapsible=icon]:hidden">
               <SidebarGroupLabel >Today</SidebarGroupLabel>
