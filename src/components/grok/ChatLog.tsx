@@ -51,7 +51,7 @@ export function ChatLog({ messages, isSending }: ChatLogProps) {
             </div>
             {message.role === 'assistant' && (
               <div className="flex items-center gap-2 mt-3 text-muted-foreground">
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="ghost" size="icon" className="h-8 w-8 -ml-2">
                   <RefreshCw className="h-4 w-4" />
                 </Button>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
