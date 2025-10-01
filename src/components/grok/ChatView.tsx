@@ -39,7 +39,7 @@ export function ChatView() {
 
   return (
     <div className={cn(
-        "relative flex flex-col h-screen text-foreground",
+        "relative flex flex-col h-screen",
         !isChatActive ? 'welcome-screen-bg' : 'bg-background'
       )}
     >

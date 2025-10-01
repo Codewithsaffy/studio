@@ -82,7 +82,7 @@ export function PromptInput({ onSubmit, isSending, isChatActive }: PromptInputPr
             "h-14 w-full rounded-full pl-5 pr-28 text-base focus-visible:ring-1 focus-visible:ring-ring",
             isChatActive
               ? "bg-card border-border"
-              : "bg-transparent border-primary shadow-[0_0_20px_rgba(212,175,55,0.2)]"
+              : "bg-background/80 dark:bg-transparent border-primary shadow-[0_0_20px_rgba(212,175,55,0.2)]"
           )}
           autoFocus
         />
