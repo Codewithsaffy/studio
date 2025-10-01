@@ -109,7 +109,7 @@
 
 @layer utilities {
   .welcome-screen-bg {
-    background: linear-gradient(180deg, #0D0A10 0%, #1A0D14 100%);
+    background: linear-gradient(180deg, #1A0D14 0%, #0D0A10 100%);
   }
 
   .heading-gradient {
