@@ -17,7 +17,6 @@ export function ChatView() {
   const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
   const isChatActive = messages.length > 0;
-  const [isUrdu, setIsUrdu] = useState(false);
 
 
   const handleSubmit = async (prompt: string) => {
@@ -44,19 +43,13 @@ export function ChatView() {
       )}
     >
       <header className="absolute top-0 right-0 z-10 p-4 flex items-center gap-4">
-        {isChatActive ? (
+        {isChatActive && (
           <>
             <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
               Share
               <Share2 className="ml-2 h-4 w-4" />
             </Button>
           </>
-        ) : (
-           <div className="flex items-center space-x-2">
-            <Label htmlFor="language-toggle" className={cn("font-medium", !isUrdu ? "text-primary" : "text-muted-foreground")}>English</Label>
-            <Switch id="language-toggle" checked={isUrdu} onCheckedChange={setIsUrdu} />
-            <Label htmlFor="language-toggle" className={cn("font-medium", isUrdu ? "text-primary" : "text-muted-foreground")}>اردو</Label>
-          </div>
         )}
       </header>
 
@@ -64,9 +57,9 @@ export function ChatView() {
         {isChatActive ? (
           <ChatLog messages={messages} isSending={isSending}/>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-center px-4">
-            <div className="w-full max-w-4xl flex flex-col items-center">
-              <div className="text-center mb-12">
+          <div className="flex flex-col items-center justify-center h-full text-center px-4" style={{paddingTop: '20vh'}}>
+            <div className="w-full max-w-4xl flex flex-col items-center gap-8">
+              <div className="text-center">
                 <h1 className="text-5xl font-headline font-bold tracking-tight sm:text-6xl max-w-2xl heading-gradient">
                   Your Dream Wedding, Perfectly Planned.
                 </h1>
