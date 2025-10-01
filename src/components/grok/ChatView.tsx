@@ -61,18 +61,21 @@ export function ChatView() {
       >
         {!isChatActive && (
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-primary dark:via-secondary dark:to-primary sm:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-white dark:to-primary">
               Your Dream Wedding, Perfectly Planned.
             </h1>
+            <p className="mt-6 text-lg leading-8 text-muted-foreground">
+              Effortlessly find vendors, manage your budget, and design your perfect day with our AI assistant.
+            </p>
           </div>
         )}
         <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
         {!isChatActive && (
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
-            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">DeepSearch</Button>
-            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Create Images</Button>
-            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Latest News</Button>
-            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Personas</Button>
+           <div className="flex flex-wrap justify-center gap-2 mt-4">
+            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Find Venues</Button>
+            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Compare Photographers</Button>
+            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Get Catering Quotes</Button>
+            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Create a Moodboard</Button>
           </div>
         )}
       </div>
