@@ -59,6 +59,16 @@ export function ChatView() {
           isChatActive ? 'bottom-8' : 'top-1/2'
         }`}
       >
+        {!isChatActive && (
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Plan Your Wedding With AI Agent In Mins
+            </h1>
+            <p className="mt-4 text-lg text-muted-foreground">
+              Your personal AI wedding planner to make your dream day a reality
+            </p>
+          </div>
+        )}
         <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
         {!isChatActive && (
           <div className="flex flex-wrap justify-center gap-2 mt-4">
