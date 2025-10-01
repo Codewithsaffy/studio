@@ -65,9 +65,9 @@ export function ChatView() {
           <ChatLog messages={messages} isSending={isSending}/>
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
-            <div className="w-full max-w-4xl">
-              <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl heading-gradient">
+            <div className="w-full max-w-4xl flex flex-col items-center">
+              <div className="text-center mb-12">
+                <h1 className="text-5xl font-headline font-bold tracking-tight sm:text-6xl max-w-2xl heading-gradient">
                   Your Dream Wedding, Perfectly Planned.
                 </h1>
               </div>
