@@ -82,12 +82,13 @@ export function PromptInput({ onSubmit, isSending, isChatActive }: PromptInputPr
     <form onSubmit={handleFormSubmit} className="w-full">
       <div className="relative flex items-center w-full">
         <Textarea
+          rows={1}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={isChatActive ? 'How can Grok help?' : 'Mujhe 400 guests ke liye venue chahiye...'}
           className={cn(
-            "h-14 w-full rounded-full pl-5 pr-28 text-base focus-visible:ring-1 focus-visible:ring-ring resize-none overflow-hidden pt-[1.1rem]",
+            "min-h-[3.5rem] w-full rounded-full pl-5 pr-28 text-base focus-visible:ring-1 focus-visible:ring-ring resize-none overflow-hidden py-3.5",
             isChatActive
               ? "bg-card border-border"
               : "bg-background/80 dark:bg-transparent border-primary shadow-[0_0_20px_rgba(212,175,55,0.2)]"
