@@ -12,6 +12,7 @@ import {
   useSidebar,
   SidebarGroup,
   SidebarGroupLabel,
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import {
   Collapsible,
@@ -22,18 +23,18 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-  ChevronsLeft,
   ChevronsUpDown,
   Folder,
   History,
   Image as ImageIcon,
   MessageSquare,
   Mic,
+  PanelLeft,
   Search,
 } from 'lucide-react';
 
 export function LeftSidebar() {
-  const { toggleSidebar, state } = useSidebar();
+  const { state, isMobile } = useSidebar();
   const [isMac, setIsMac] = React.useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = React.useState(true);
 
@@ -88,20 +89,21 @@ export function LeftSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
 
-        <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
-          <div className="group-data-[collapsible=icon]:hidden">
+        <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen} className="mt-4">
+           <div className="group-data-[collapsible=icon]:hidden px-2 pb-2">
             <CollapsibleTrigger asChild>
-              <div className="flex items-center justify-between p-2 pt-4">
-                <SidebarGroupLabel>History</SidebarGroupLabel>
-                <Button variant="ghost" size="icon" className="h-6 w-6">
-                  <ChevronsUpDown className="h-4 w-4" />
+                <Button variant="ghost" className="w-full justify-start px-2">
+                    <History className="mr-2 h-4 w-4" />
+                    <span>History</span>
+                    <ChevronsUpDown className="ml-auto h-4 w-4" />
                 </Button>
-              </div>
             </CollapsibleTrigger>
           </div>
           <div className="group-data-[collapsible=icon]:block hidden p-2">
-             <SidebarMenuButton tooltip="History" size="icon" className="w-full">
-                <History />
+             <SidebarMenuButton tooltip="History" size="icon" className="w-full" asChild>
+                <CollapsibleTrigger>
+                    <History />
+                </CollapsibleTrigger>
             </SidebarMenuButton>
           </div>
           <CollapsibleContent>
@@ -129,7 +131,7 @@ export function LeftSidebar() {
         </Collapsible>
       </SidebarContent>
       <SidebarFooter>
-        <div className="flex items-center justify-between p-2">
+         <div className="flex items-center justify-between p-2">
             <div className="flex items-center gap-3">
                 <Avatar className="h-8 w-8">
                     <AvatarFallback>M</AvatarFallback>
@@ -138,18 +140,15 @@ export function LeftSidebar() {
                     User
                 </span>
             </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className="group-data-[collapsible=icon]:hidden"
-          >
-            <ChevronsLeft
-              className={`h-5 w-5 transition-transform duration-300 ${
+          {!isMobile && (
+            <SidebarTrigger
+              className={`transition-transform duration-300 ${
                 state === 'collapsed' ? 'rotate-180' : ''
               }`}
-            />
-          </Button>
+            >
+              <PanelLeft />
+            </SidebarTrigger>
+          )}
         </div>
       </SidebarFooter>
     </Sidebar>

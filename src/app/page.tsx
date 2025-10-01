@@ -17,7 +17,7 @@ export default function Home() {
     >
       <LeftSidebar />
       <SidebarInset>
-        <div className="absolute top-4 left-4">
+        <div className="absolute top-4 left-4 z-20">
           <SidebarTrigger />
         </div>
         <ChatView />
