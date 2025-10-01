@@ -56,13 +56,13 @@ export function ChatView() {
 
       <div
         className={`absolute left-1/2 -translate-x-1/2 w-full max-w-4xl px-4 transition-all duration-500 ease-in-out ${
-          isChatActive ? 'bottom-8' : 'top-1/2 -translate-y-1/2'
+          isChatActive ? 'bottom-8' : 'top-1/2 -translate-y-[calc(50%_-_2rem)]'
         }`}
       >
         {!isChatActive && (
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 sm:text-5xl">
-              Book Your Wedding vendors in min
+              Your Dream Wedding, Perfectly Planned.
             </h1>
           </div>
         )}
