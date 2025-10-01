@@ -4,39 +4,50 @@
 
 @layer base {
   :root {
-    --background: 220 2% 8%;
-    --foreground: 0 0% 89%;
-    --card: 220 3% 12%;
-    --card-foreground: 0 0% 89%;
-    --popover: 220 3% 12%;
-    --popover-foreground: 0 0% 89%;
-    --primary: 0 0% 89%;
-    --primary-foreground: 220 2% 8%;
-    --secondary: 220 3% 18%;
-    --secondary-foreground: 0 0% 89%;
-    --muted: 220 3% 12%;
-    --muted-foreground: 212 7% 63%;
-    --accent: 220 3% 18%;
-    --accent-foreground: 0 0% 89%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 215 4% 25%;
-    --input: 215 4% 25%;
-    --ring: 212 7% 63%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
+    --background: 285 22% 5%; /* #0D0A10 */
+    --foreground: 0 0% 100%; /* #FFFFFF */
+
+    --card: 288 12% 9%; /* #1A1419 */
+    --card-foreground: 0 0% 100%; /* #FFFFFF */
+
+    --popover: 288 12% 9%; /* #1A1419 */
+    --popover-foreground: 0 0% 100%; /* #FFFFFF */
+
+    --primary: 45 76% 52%; /* #D4AF37 */
+    --primary-foreground: 285 22% 5%; /* #0D0A10 */
+
+    --secondary: 345 100% 25%; /* #800020 */
+    --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+    
+    --muted: 290 10% 13%; /* #251D23 */
+    --muted-foreground: 285 5% 63%; /* #9E9BA3 */
+    
+    --accent: 290 10% 13%; /* #251D23 */
+    --accent-foreground: 0 0% 100%; /* #FFFFFF */
+    
+    --destructive: 0 63% 45%; /* #EF4444 */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+    
+    --border: 45 61% 33%; /* rgba(212, 175, 55, 0.2) -> using a solid approximation */
+    --input: 288 12% 9%; /* #1A1419 */
+    --ring: 45 76% 52%; /* #D4AF37 */
+    
+    --chart-1: 45 76% 52%;
+    --chart-2: 345 100% 25%;
+    --chart-3: 352 28% 54%;
+    --chart-4: 43 89% 60%;
     --chart-5: 27 87% 67%;
+    
     --radius: 0.5rem;
-    --sidebar-background: 220 3% 12%;
-    --sidebar-foreground: 0 0% 89%;
-    --sidebar-primary: 0 0% 89%;
-    --sidebar-primary-foreground: 220 2% 8%;
-    --sidebar-accent: 220 3% 18%;
-    --sidebar-accent-foreground: 0 0% 89%;
-    --sidebar-border: 215 4% 25%;
-    --sidebar-ring: 212 7% 63%;
+    
+    --sidebar-background: 288 12% 9%; /* #1A1419 */
+    --sidebar-foreground: 285 5% 82%; /* #D1CFD3 */
+    --sidebar-primary: 45 76% 52%; /* #D4AF37 */
+    --sidebar-primary-foreground: 285 22% 5%; /* #0D0A10 */
+    --sidebar-accent: 290 10% 13%; /* #251D23 */
+    --sidebar-accent-foreground: 0 0% 100%; /* #FFFFFF */
+    --sidebar-border: 45 61% 33%; /* Approximation */
+    --sidebar-ring: 45 76% 52%; /* #D4AF37 */
   }
 
   /* The app is dark mode only, so no .dark class is needed */
