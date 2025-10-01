@@ -40,9 +40,9 @@ export function ChatLog({ messages, isSending }: ChatLogProps) {
             <div
               className={cn(
                 'space-y-4 text-foreground/90 p-4 rounded-lg',
-                message.role === 'assistant'
-                  ? 'bg-card'
-                  : 'bg-primary text-primary-foreground'
+                message.role === 'user'
+                  ? 'bg-primary text-primary-foreground inline-block'
+                  : ''
               )}
             >
               {message.content.split('\n').map((line, i) => (
