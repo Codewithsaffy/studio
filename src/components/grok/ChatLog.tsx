@@ -39,10 +39,10 @@ export function ChatLog({ messages, isSending }: ChatLogProps) {
             </p>
             <div
               className={cn(
-                'space-y-4 text-foreground/90 p-4 rounded-lg',
+                'space-y-4 text-foreground/90 rounded-lg',
                 message.role === 'user'
-                  ? 'bg-primary text-primary-foreground inline-block'
-                  : ''
+                  ? 'bg-primary text-primary-foreground inline-block p-4'
+                  : 'py-4 pr-4'
               )}
             >
               {message.content.split('\n').map((line, i) => (
