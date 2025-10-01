@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect, type FormEvent } from 'react';
-import { Input } from '@/components/ui/input';
+import { useState, useRef, useEffect, type FormEvent, type KeyboardEvent } from 'react';
+import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { ArrowUp, Mic, LoaderCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -61,6 +61,13 @@ export function PromptInput({ onSubmit, isSending, isChatActive }: PromptInputPr
     }
   };
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleFormSubmit(e as any);
+    }
+  };
+
   const toggleListening = () => {
     if (!recognitionRef.current) return;
 
@@ -74,12 +81,13 @@ export function PromptInput({ onSubmit, isSending, isChatActive }: PromptInputPr
   return (
     <form onSubmit={handleFormSubmit} className="w-full">
       <div className="relative flex items-center w-full">
-        <Input
+        <Textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder={isChatActive ? 'How can Grok help?' : 'Mujhe 400 guests ke liye venue chahiye...'}
           className={cn(
-            "h-14 w-full rounded-full pl-5 pr-28 text-base focus-visible:ring-1 focus-visible:ring-ring",
+            "h-14 w-full rounded-full pl-5 pr-28 text-base focus-visible:ring-1 focus-visible:ring-ring resize-none overflow-hidden pt-[1.1rem]",
             isChatActive
               ? "bg-card border-border"
               : "bg-background/80 dark:bg-transparent border-primary shadow-[0_0_20px_rgba(212,175,55,0.2)]"
