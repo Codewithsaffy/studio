@@ -50,32 +50,29 @@ export function ChatView() {
           <ChatLog messages={messages} isSending={isSending}/>
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
+            <div className="w-full max-w-4xl">
+              <div className="text-center mb-8">
+                <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+                  Your Dream Wedding, Perfectly Planned.
+                </h1>
+              </div>
+              <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
+              <div className="flex flex-wrap justify-center gap-2 mt-4">
+                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Find Venues</Button>
+                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Compare Photographers</Button>
+                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Get Catering Quotes</Button>
+                <Button variant="outline" size="sm" a className="rounded-full bg-transparent border-border hover:bg-accent">Create a Moodboard</Button>
+              </div>
+            </div>
           </div>
         )}
       </main>
 
-      <div
-        className={`absolute w-full max-w-4xl px-4 transition-all duration-500 ease-in-out left-1/2 -translate-x-1/2 ${
-          isChatActive ? 'bottom-8' : 'top-1/2 -translate-y-1/2'
-        }`}
-      >
-        {!isChatActive && (
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Your Dream Wedding, Perfectly Planned.
-            </h1>
-          </div>
-        )}
-        <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
-        {!isChatActive && (
-           <div className="flex flex-wrap justify-center gap-2 mt-4">
-            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Find Venues</Button>
-            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Compare Photographers</Button>
-            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Get Catering Quotes</Button>
-            <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Create a Moodboard</Button>
-          </div>
-        )}
-      </div>
+      {isChatActive && (
+        <div className="absolute w-full max-w-4xl px-4 bottom-8 left-1/2 -translate-x-1/2">
+          <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
+        </div>
+      )}
     </div>
   );
 }
