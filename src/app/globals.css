@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 240 10% 3.9%;
+    --background: 300 11% 97%; /* #F9F6F8 */
+    --foreground: 285 22% 5%; /* #0D0A10 */
 
-    --card: 330 25% 98%;
-    --card-foreground: 285 22% 5%;
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 285 22% 5%; /* #0D0A10 */
 
-    --popover: 330 25% 98%;
-    --popover-foreground: 285 22% 5%;
+    --popover: 0 0% 100%; /* #FFFFFF */
+    --popover-foreground: 285 22% 5%; /* #0D0A10 */
 
-    --primary: 45 76% 52%;
+    --primary: 45 76% 52%; /* #D4AF37 */
     --primary-foreground: 285 22% 5%;
 
-    --secondary: 345 100% 25%;
+    --secondary: 345 100% 25%; /* #800020 */
     --secondary-foreground: 0 0% 100%;
     
-    --muted: 330 20% 95%;
-    --muted-foreground: 304 3% 42%;
+    --muted: 300 17% 94%; /* #F0EAF0 */
+    --muted-foreground: 279 5% 42%; /* #6B6873 */
     
-    --accent: 330 20% 94%;
-    --accent-foreground: 285 22% 5%;
+    --accent: 300 17% 94%; /* #F0EAF0 */
+    --accent-foreground: 285 22% 5%; /* #0D0A10 */
     
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84.2% 60.2%; /* #EF4444 approx from --error-border */
     --destructive-foreground: 0 0% 98%;
     
-    --border: 330 11% 89%;
-    --input: 330 11% 89%;
-    --ring: 45 76% 52%;
+    --border: 300 9% 89%; /* #E6E1E6 approx from #F0EAF0 */
+    --input: 300 9% 89%;
+    --ring: 45 76% 52%; /* #D4AF37 */
     
     --chart-1: 45 76% 52%;
     --chart-2: 345 100% 25%;
@@ -40,13 +40,13 @@
     
     --radius: 0.5rem;
     
-    --sidebar-background: 330 25% 98%;
+    --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 285 22% 5%;
     --sidebar-primary: 45 76% 52%;
     --sidebar-primary-foreground: 285 22% 5%;
-    --sidebar-accent: 330 20% 94%;
+    --sidebar-accent: 300 17% 94%;
     --sidebar-accent-foreground: 285 22% 5%;
-    --sidebar-border: 330 11% 89%;
+    --sidebar-border: 300 9% 89%;
     --sidebar-ring: 45 76% 52%;
   }
 
