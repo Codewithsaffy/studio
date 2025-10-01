@@ -74,7 +74,6 @@ export function ChatView() {
           <ChatLog messages={messages} isSending={isSending}/>
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <h1 className="mt-4 text-5xl font-medium text-foreground/50">Grok</h1>
           </div>
         )}
       </main>
