@@ -61,7 +61,7 @@ export function ChatView() {
       >
         {!isChatActive && (
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-white dark:to-primary">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-white dark:to-secondary">
               Your Dream Wedding, Perfectly Planned.
             </h1>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
