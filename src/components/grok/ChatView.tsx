@@ -55,8 +55,8 @@ export function ChatView() {
       </main>
 
       <div
-        className={`absolute left-1/2 -translate-x-1/2 w-full max-w-4xl px-4 transition-all duration-500 ease-in-out ${
-          isChatActive ? 'bottom-8' : 'top-1/2 -translate-y-[calc(50%_-_2rem)]'
+        className={`absolute w-full max-w-4xl px-4 transition-all duration-500 ease-in-out left-1/2 -translate-x-1/2 ${
+          isChatActive ? 'bottom-8' : 'top-1/2 -translate-y-1/2'
         }`}
       >
         {!isChatActive && (
