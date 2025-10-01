@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect, type FormEvent } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowUp, Mic, LoaderCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -78,9 +77,9 @@ export function PromptInput({ onSubmit, isSending, isChatActive }: PromptInputPr
         <Input
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder={isChatActive ? 'How can Grok help?' : 'What do you want to know?'}
+          placeholder={isChatActive ? 'How can Grok help?' : 'Mujhe 400 guests ke liye venue chahiye...'}
           className={cn(
-            "h-14 w-full rounded-full pl-5 pr-40 text-base focus-visible:ring-1 focus-visible:ring-ring",
+            "h-14 w-full rounded-full pl-5 pr-28 text-base focus-visible:ring-1 focus-visible:ring-ring",
             isChatActive
               ? "bg-card border-border"
               : "bg-transparent border-primary shadow-[0_0_20px_rgba(212,175,55,0.2)]"
@@ -88,19 +87,8 @@ export function PromptInput({ onSubmit, isSending, isChatActive }: PromptInputPr
           autoFocus
         />
         <div className="absolute top-1/2 right-3 -translate-y-1/2 flex items-center gap-1">
-          {!isChatActive && (
-            <Select defaultValue="grok-4-fast">
-              <SelectTrigger className="w-auto bg-transparent border-none focus:ring-0 shadow-none text-foreground">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="grok-4-fast">Grok 4 Fast</SelectItem>
-                <SelectItem value="grok-4">Grok 4</SelectItem>
-              </SelectContent>
-            </Select>
-          )}
           <Button type="button" variant="ghost" size="icon" onClick={toggleListening} disabled={isSending}>
-            <Mic className={`h-5 w-5 transition-colors ${isListening ? 'text-blue-500' : 'text-muted-foreground'}`} />
+            <Mic className={`h-5 w-5 transition-colors ${isListening ? 'text-blue-500' : 'text-primary'}`} />
           </Button>
           {(prompt.trim() || isSending) && (
             <Button type="submit" size="icon" disabled={isSending} className="rounded-full">
