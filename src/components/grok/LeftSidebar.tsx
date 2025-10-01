@@ -133,7 +133,7 @@ export function LeftSidebar() {
           </CollapsibleContent>
         </Collapsible>
 
-        <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen} className="mt-4 flex flex-col flex-1 min-h-0">
+        <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen} className="flex flex-col flex-1 min-h-0">
            <div className="group-data-[collapsible=icon]:hidden px-2 pb-2">
             <CollapsibleTrigger asChild>
                 <Button variant="ghost" className="w-full justify-start px-2">
