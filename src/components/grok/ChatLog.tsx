@@ -21,7 +21,9 @@ export function ChatLog({ messages, isSending }: ChatLogProps) {
                 <AvatarFallback>M</AvatarFallback>
               </Avatar>
             ) : (
-              <GrokLogo className="h-8 w-8" />
+              <div className="h-8 w-8 rounded-full flex items-center justify-center">
+                  <GrokLogo className="h-8 w-8" />
+              </div>
             )}
           </div>
           <div className="flex-1">
