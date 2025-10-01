@@ -25,6 +25,7 @@ import {
   ChevronsLeft,
   ChevronsUpDown,
   Folder,
+  History,
   Image as ImageIcon,
   MessageSquare,
   Mic,
@@ -40,16 +41,24 @@ export function LeftSidebar() {
     setIsMac(navigator.platform.toUpperCase().indexOf('MAC') >= 0);
   }, []);
 
+  const isCollapsed = state === 'collapsed';
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search" className="pl-9 bg-background focus-visible:ring-sidebar-ring" />
-          <kbd className="absolute top-1/2 -translate-y-1/2 right-3 hidden items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground group-data-[collapsible=icon]:hidden md:flex">
-            <span className="text-xs">{isMac ? '⌘' : 'Ctrl+'}</span>K
-          </kbd>
-        </div>
+        {isCollapsed ? (
+          <SidebarMenuButton tooltip="Search" size="icon" className="w-full">
+            <Search />
+          </SidebarMenuButton>
+        ) : (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Search" className="pl-9 bg-background focus-visible:ring-sidebar-ring" />
+            <kbd className="absolute top-1/2 -translate-y-1/2 right-3 hidden items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground group-data-[collapsible=icon]:hidden md:flex">
+              <span className="text-xs">{isMac ? '⌘' : 'Ctrl+'}</span>K
+            </kbd>
+          </div>
+        )}
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
@@ -90,9 +99,14 @@ export function LeftSidebar() {
               </div>
             </CollapsibleTrigger>
           </div>
+          <div className="group-data-[collapsible=icon]:block hidden p-2">
+             <SidebarMenuButton tooltip="History" size="icon" className="w-full">
+                <History />
+            </SidebarMenuButton>
+          </div>
           <CollapsibleContent>
-            <SidebarGroup>
-              <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">Today</SidebarGroupLabel>
+            <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+              <SidebarGroupLabel >Today</SidebarGroupLabel>
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton>What is Next.js?</SidebarMenuButton>
@@ -103,8 +117,8 @@ export function LeftSidebar() {
               </SidebarMenu>
             </SidebarGroup>
 
-            <SidebarGroup>
-              <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">Yesterday</SidebarGroupLabel>
+            <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+              <SidebarGroupLabel>Yesterday</SidebarGroupLabel>
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton>Best fonts for web</SidebarMenuButton>
