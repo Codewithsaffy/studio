@@ -65,7 +65,7 @@ export function ChatView() {
                 </h1>
               </div>
               <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
-              <div className="flex flex-wrap flex-col sm:flex-row justify-center gap-2 mt-2 w-full sm:w-auto">
+              <div className="hidden sm:flex flex-wrap flex-col sm:flex-row justify-center gap-2 mt-2 w-full sm:w-auto">
                 <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent quick-action-hover">Find Venues</Button>
                 <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent quick-action-hover">Compare Photographers</Button>
                 <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent quick-action-hover">Get Catering Quotes</Button>
