@@ -29,12 +29,12 @@ import {
   Camera,
   Car,
   ChevronsUpDown,
-  Folder,
   History,
-  Image as ImageIcon,
+  Inbox,
   MessageSquare,
   Search,
   Utensils,
+  Book,
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 
@@ -76,15 +76,15 @@ export function LeftSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Imagine">
-              <ImageIcon />
-              <span className="group-data-[collapsible=icon]:hidden">Imagine</span>
+            <SidebarMenuButton tooltip="Inbox">
+              <Inbox />
+              <span className="group-data-[collapsible=icon]:hidden">Inbox</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Projects">
-              <Folder />
-              <span className="group-data-[collapsible=icon]:hidden">Projects</span>
+            <SidebarMenuButton tooltip="Bookings">
+              <Book />
+              <span className="group-data-[collapsible=icon]:hidden">Bookings</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
