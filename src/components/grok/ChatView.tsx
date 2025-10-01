@@ -61,12 +61,9 @@ export function ChatView() {
       >
         {!isChatActive && (
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Plan Your Wedding With AI Agent In Mins
+            <h1 className="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 sm:text-5xl">
+              Book Your Wedding vendors in min
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Your personal AI wedding planner to make your dream day a reality
-            </p>
           </div>
         )}
         <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
