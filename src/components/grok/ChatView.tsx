@@ -64,7 +64,9 @@ export function ChatView() {
                   Your Dream Wedding, Perfectly Planned.
                 </h1>
               </div>
-              <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
+              <div className="hidden sm:block w-full">
+                <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
+              </div>
               <div className="hidden sm:flex flex-wrap flex-col sm:flex-row justify-center gap-2 mt-2 w-full sm:w-auto">
                 <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent quick-action-hover">Find Venues</Button>
                 <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent quick-action-hover">Compare Photographers</Button>
@@ -76,11 +78,9 @@ export function ChatView() {
         )}
       </main>
 
-      {isChatActive && (
-        <div className="absolute w-full max-w-4xl px-4 bottom-8 left-1/2 -translate-x-1/2">
+      <div className={cn("absolute w-full max-w-4xl px-4 bottom-8 left-1/2 -translate-x-1/2", isChatActive ? "" : "sm:hidden")}>
           <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
-        </div>
-      )}
+      </div>
     </div>
   );
 }
