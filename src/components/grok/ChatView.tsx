@@ -61,7 +61,7 @@ export function ChatView() {
                 <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Find Venues</Button>
                 <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Compare Photographers</Button>
                 <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Get Catering Quotes</Button>
-                <Button variant="outline" size="sm" a className="rounded-full bg-transparent border-border hover:bg-accent">Create a Moodboard</Button>
+                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Create a Moodboard</Button>
               </div>
             </div>
           </div>
