@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import type { Message } from '@/types';
 import { useToast } from '@/hooks/use-toast';
-import { generateAiResponse } from '@/ai/flows/generate-ai-response';
 
 import { PromptInput } from '@/components/grok/PromptInput';
 import { ChatLog } from '@/components/grok/ChatLog';
@@ -11,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Share2 } from 'lucide-react';
-import { Avatar, AvatarFallback } from '../ui/avatar';
 
 export function ChatView() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -24,29 +22,16 @@ export function ChatView() {
     const userMessage: Message = { id: Date.now().toString(), role: 'user', content: prompt };
     setMessages((prev) => [...prev, userMessage]);
 
-    try {
-      const conversationHistory = messages.map(msg => ({ role: msg.role as ('user' | 'assistant'), content: msg.content }));
-
-      const { response } = await generateAiResponse({
-        prompt: prompt,
-        conversationHistory,
-      });
-
-      const aiMessage: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: response };
+    // Simulate a response without calling AI
+    setTimeout(() => {
+      const aiMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `you input is ${prompt}`,
+      };
       setMessages((prev) => [...prev, aiMessage]);
-
-    } catch (error) {
-      console.error(error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to get a response from the AI.",
-      });
-      // Optionally remove the user message if AI fails
-      setMessages(prev => prev.slice(0, prev.length -1));
-    } finally {
       setIsSending(false);
-    }
+    }, 500);
   };
 
   return (
