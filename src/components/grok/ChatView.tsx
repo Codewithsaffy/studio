@@ -49,7 +49,7 @@ export function ChatView() {
         {isChatActive ? (
           <ChatLog messages={messages} isSending={isSending}/>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-center">
+          <div className="flex flex-col items-center justify-center h-full text-center px-4">
           </div>
         )}
       </main>

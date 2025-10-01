@@ -18,7 +18,7 @@ export function ChatLog({ messages, isSending }: ChatLogProps) {
           key={message.id}
           className={cn(
             'flex gap-4 text-base',
-            message.role === 'user' && 'justify-end'
+            message.role === 'user' ? 'justify-end' : ''
           )}
         >
           {message.role === 'assistant' && (
@@ -28,11 +28,23 @@ export function ChatLog({ messages, isSending }: ChatLogProps) {
               </Avatar>
             </div>
           )}
-          <div className={cn('flex-1', message.role === 'user' && 'text-right')}>
+          <div
+            className={cn(
+              'flex-1 max-w-xl',
+              message.role === 'user' && 'text-right'
+            )}
+          >
             <p className="font-medium mb-2">
               {message.role === 'user' ? 'You' : 'Grok'}
             </p>
-            <div className="space-y-4 text-foreground/90">
+            <div
+              className={cn(
+                'space-y-4 text-foreground/90 p-4 rounded-lg',
+                message.role === 'assistant'
+                  ? 'bg-card'
+                  : 'bg-primary text-primary-foreground'
+              )}
+            >
               {message.content.split('\n').map((line, i) => (
                 <p key={i}>{line}</p>
               ))}
@@ -71,7 +83,7 @@ export function ChatLog({ messages, isSending }: ChatLogProps) {
           <Avatar className="h-8 w-8 flex-shrink-0">
             <AvatarFallback>G</AvatarFallback>
           </Avatar>
-          <div className="flex-1">
+          <div className="flex-1 max-w-xl">
             <p className="font-medium mb-2">Grok</p>
             <div className="space-y-2">
               <Skeleton className="h-4 w-full" />
