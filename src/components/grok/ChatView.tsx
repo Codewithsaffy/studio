@@ -57,7 +57,7 @@ export function ChatView() {
         {isChatActive ? (
           <ChatLog messages={messages} isSending={isSending}/>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-center px-4" style={{paddingTop: '20vh'}}>
+          <div className="flex flex-col items-center justify-center h-full text-center px-4">
             <div className="w-full max-w-4xl flex flex-col items-center gap-8">
               <div className="text-center">
                 <h1 className="text-5xl font-headline font-bold tracking-tight sm:text-6xl max-w-2xl heading-gradient">
