@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import type { Message } from '@/types';
 import { useToast } from '@/hooks/use-toast';
-import { interpretUserPrompt } from '@/ai/flows/interpret-user-prompt';
 import { generateAiResponse } from '@/ai/flows/generate-ai-response';
 
 import { PromptInput } from '@/components/grok/PromptInput';
@@ -26,12 +25,10 @@ export function ChatView() {
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const { interpretedPrompt } = await interpretUserPrompt({ prompt });
-
       const conversationHistory = messages.map(msg => ({ role: msg.role as ('user' | 'assistant'), content: msg.content }));
 
       const { response } = await generateAiResponse({
-        prompt: interpretedPrompt,
+        prompt: prompt,
         conversationHistory,
       });
 
