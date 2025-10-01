@@ -18,6 +18,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,7 +60,7 @@ export function LeftSidebar() {
           </div>
         )}
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="flex flex-col overflow-hidden">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton tooltip="Ask" isActive>
@@ -87,7 +88,7 @@ export function LeftSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
 
-        <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen} className="mt-4">
+        <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen} className="mt-4 flex flex-col flex-1 min-h-0">
            <div className="group-data-[collapsible=icon]:hidden px-2 pb-2">
             <CollapsibleTrigger asChild>
                 <Button variant="ghost" className="w-full justify-start px-2">
@@ -106,27 +107,29 @@ export function LeftSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
           </SidebarMenu>
-          <CollapsibleContent>
-            <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-              <SidebarGroupLabel >Today</SidebarGroupLabel>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton>What is Next.js?</SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton>Dark mode UI design tips</SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroup>
+          <CollapsibleContent asChild className="flex-1">
+            <ScrollArea>
+                <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+                <SidebarGroupLabel >Today</SidebarGroupLabel>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                    <SidebarMenuButton>What is Next.js?</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                    <SidebarMenuButton>Dark mode UI design tips</SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+                </SidebarGroup>
 
-            <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-              <SidebarGroupLabel>Yesterday</SidebarGroupLabel>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton>Best fonts for web</SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroup>
+                <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+                <SidebarGroupLabel>Yesterday</SidebarGroupLabel>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                    <SidebarMenuButton>Best fonts for web</SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+                </SidebarGroup>
+            </ScrollArea>
           </CollapsibleContent>
         </Collapsible>
       </SidebarContent>
