@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowUp, Mic, LoaderCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface PromptInputProps {
   onSubmit: (prompt: string) => void;
@@ -78,7 +79,12 @@ export function PromptInput({ onSubmit, isSending, isChatActive }: PromptInputPr
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder={isChatActive ? 'How can Grok help?' : 'What do you want to know?'}
-          className="h-14 w-full rounded-full bg-card pl-5 pr-40 text-base border-border focus-visible:ring-1 focus-visible:ring-ring"
+          className={cn(
+            "h-14 w-full rounded-full pl-5 pr-40 text-base focus-visible:ring-1 focus-visible:ring-ring",
+            isChatActive
+              ? "bg-card border-border"
+              : "bg-transparent border-primary shadow-[0_0_20px_rgba(212,175,55,0.2)]"
+          )}
           autoFocus
         />
         <div className="absolute top-1/2 right-3 -translate-y-1/2 flex items-center gap-1">

@@ -106,3 +106,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .welcome-screen-bg {
+    background: linear-gradient(180deg, #0D0A10 0%, #1A0D14 100%);
+  }
+
+  .heading-gradient {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F4C430 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .quick-action-hover {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .quick-action-hover:hover {
+    background: linear-gradient(135deg, #D4AF37, #F4C430);
+    transform: translateY(-2px);
+  }
+}

@@ -8,6 +8,7 @@ import { PromptInput } from '@/components/grok/PromptInput';
 import { ChatLog } from '@/components/grok/ChatLog';
 import { Button } from '@/components/ui/button';
 import { Share2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export function ChatView() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -33,7 +34,11 @@ export function ChatView() {
   };
 
   return (
-    <div className="relative flex flex-col h-screen bg-background text-foreground">
+    <div className={cn(
+        "relative flex flex-col h-screen text-foreground",
+        !isChatActive ? 'welcome-screen-bg' : 'bg-background'
+      )}
+    >
       <header className="absolute top-0 right-0 z-10 p-4 flex items-center gap-4">
         {isChatActive && (
           <>
@@ -52,16 +57,16 @@ export function ChatView() {
           <div className="flex flex-col items-center justify-center h-full text-center px-4">
             <div className="w-full max-w-4xl">
               <div className="text-center mb-8">
-                <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl heading-gradient">
                   Your Dream Wedding, Perfectly Planned.
                 </h1>
               </div>
               <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
               <div className="flex flex-wrap justify-center gap-2 mt-4">
-                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Find Venues</Button>
-                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Compare Photographers</Button>
-                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Get Catering Quotes</Button>
-                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent">Create a Moodboard</Button>
+                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent quick-action-hover">Find Venues</Button>
+                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent quick-action-hover">Compare Photographers</Button>
+                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent quick-action-hover">Get Catering Quotes</Button>
+                <Button variant="outline" size="sm" className="rounded-full bg-transparent border-border hover:bg-accent quick-action-hover">Create a Moodboard</Button>
               </div>
             </div>
           </div>
