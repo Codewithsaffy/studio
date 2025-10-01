@@ -97,7 +97,7 @@ export function LeftSidebar() {
                 </Button>
             </CollapsibleTrigger>
           </div>
-           <SidebarMenu className="group-data-[collapsible=icon]:flex hidden">
+           <SidebarMenu className="hidden group-data-[collapsible=icon]:flex">
               <SidebarMenuItem>
                 <SidebarMenuButton tooltip="History" size="icon" asChild>
                     <CollapsibleTrigger>
