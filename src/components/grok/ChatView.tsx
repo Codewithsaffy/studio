@@ -78,7 +78,7 @@ export function ChatView() {
         )}
       </main>
 
-      <div className={cn("absolute w-full max-w-4xl px-4 bottom-8 left-1/2 -translate-x-1/2", isChatActive ? "" : "sm:hidden")}>
+      <div className={cn("absolute w-full max-w-4xl px-4 bottom-8 left-1/2 -translate-x-1/2 pb-1", isChatActive ? "" : "sm:hidden")}>
           <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
       </div>
     </div>
