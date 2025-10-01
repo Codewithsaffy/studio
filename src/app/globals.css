@@ -128,7 +128,7 @@
   }
 
   .quick-action-hover {
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
   }
 
   .quick-action-hover:hover {
@@ -137,7 +137,7 @@
   }
 
   .dark .quick-action-hover:hover {
-    background: linear-gradient(135deg, #D4AF37, #F4C430);
+    @apply bg-primary/10 border-primary;
     transform: translateY(-2px);
   }
 }
