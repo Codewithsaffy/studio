@@ -9,12 +9,16 @@ import { ChatLog } from '@/components/grok/ChatLog';
 import { Button } from '@/components/ui/button';
 import { Share2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 export function ChatView() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
   const isChatActive = messages.length > 0;
+  const [isUrdu, setIsUrdu] = useState(false);
+
 
   const handleSubmit = async (prompt: string) => {
     setIsSending(true);
@@ -40,13 +44,19 @@ export function ChatView() {
       )}
     >
       <header className="absolute top-0 right-0 z-10 p-4 flex items-center gap-4">
-        {isChatActive && (
+        {isChatActive ? (
           <>
             <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
               Share
               <Share2 className="ml-2 h-4 w-4" />
             </Button>
           </>
+        ) : (
+           <div className="flex items-center space-x-2">
+            <Label htmlFor="language-toggle" className={cn("font-medium", !isUrdu ? "text-primary" : "text-muted-foreground")}>English</Label>
+            <Switch id="language-toggle" checked={isUrdu} onCheckedChange={setIsUrdu} />
+            <Label htmlFor="language-toggle" className={cn("font-medium", isUrdu ? "text-primary" : "text-muted-foreground")}>اردو</Label>
+          </div>
         )}
       </header>
 
@@ -60,6 +70,8 @@ export function ChatView() {
                 <h1 className="text-4xl font-bold tracking-tight sm:text-5xl heading-gradient">
                   Your Dream Wedding, Perfectly Planned.
                 </h1>
+                <p className="mt-4 text-xl text-primary">Apki Shadi, Humare Saath</p>
+                <div className="mt-4 w-48 h-px mx-auto bg-gradient-to-r from-transparent via-primary to-transparent"></div>
               </div>
               <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
               <div className="flex flex-wrap justify-center gap-2 mt-4">
