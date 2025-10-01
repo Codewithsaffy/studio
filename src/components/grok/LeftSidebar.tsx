@@ -5,19 +5,25 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
+  SidebarGroup,
+  SidebarGroupLabel,
 } from '@/components/ui/sidebar';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   ChevronsLeft,
+  ChevronsUpDown,
   Folder,
   Image as ImageIcon,
   MessageSquare,
@@ -28,6 +34,7 @@ import {
 export function LeftSidebar() {
   const { toggleSidebar, state } = useSidebar();
   const [isMac, setIsMac] = React.useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = React.useState(true);
 
   React.useEffect(() => {
     setIsMac(navigator.platform.toUpperCase().indexOf('MAC') >= 0);
@@ -49,49 +56,63 @@ export function LeftSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton tooltip="Ask" isActive>
               <MessageSquare />
-              <span>Ask</span>
+              <span className="group-data-[collapsible=icon]:hidden">Ask</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton tooltip="Voice">
               <Mic />
-              <span>Voice</span>
+              <span className="group-data-[collapsible=icon]:hidden">Voice</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton tooltip="Imagine">
               <ImageIcon />
-              <span>Imagine</span>
+              <span className="group-data-[collapsible=icon]:hidden">Imagine</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton tooltip="Projects">
               <Folder />
-              <span>Projects</span>
+              <span className="group-data-[collapsible=icon]:hidden">Projects</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Today</SidebarGroupLabel>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton>What is Next.js?</SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton>Dark mode UI design tips</SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
+        <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
+          <div className="group-data-[collapsible=icon]:hidden">
+            <CollapsibleTrigger asChild>
+              <div className="flex items-center justify-between p-2 pt-4">
+                <SidebarGroupLabel>History</SidebarGroupLabel>
+                <Button variant="ghost" size="icon" className="h-6 w-6">
+                  <ChevronsUpDown className="h-4 w-4" />
+                </Button>
+              </div>
+            </CollapsibleTrigger>
+          </div>
+          <CollapsibleContent>
+            <SidebarGroup>
+              <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">Today</SidebarGroupLabel>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton>What is Next.js?</SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton>Dark mode UI design tips</SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Yesterday</SidebarGroupLabel>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton>Best fonts for web</SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
+            <SidebarGroup>
+              <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">Yesterday</SidebarGroupLabel>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton>Best fonts for web</SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroup>
+          </CollapsibleContent>
+        </Collapsible>
       </SidebarContent>
       <SidebarFooter>
         <div className="flex items-center justify-between p-2">
