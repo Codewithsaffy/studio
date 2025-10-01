@@ -23,13 +23,18 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
+  Building2,
+  Building,
+  Bus,
+  Camera,
+  Car,
   ChevronsUpDown,
   Folder,
   History,
   Image as ImageIcon,
   MessageSquare,
-  Mic,
   Search,
+  Utensils,
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 
@@ -37,6 +42,7 @@ export function LeftSidebar() {
   const { state } = useSidebar();
   const [isMac, setIsMac] = React.useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = React.useState(true);
+  const [isVendorsOpen, setIsVendorsOpen] = React.useState(true);
 
   React.useEffect(() => {
     setIsMac(navigator.platform.toUpperCase().indexOf('MAC') >= 0);
@@ -70,12 +76,6 @@ export function LeftSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Voice">
-              <Mic />
-              <span className="group-data-[collapsible=icon]:hidden">Voice</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
             <SidebarMenuButton tooltip="Imagine">
               <ImageIcon />
               <span className="group-data-[collapsible=icon]:hidden">Imagine</span>
@@ -88,6 +88,50 @@ export function LeftSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+
+        <Collapsible open={isVendorsOpen} onOpenChange={setIsVendorsOpen} className="mt-4 flex flex-col min-h-0">
+           <div className="group-data-[collapsible=icon]:hidden px-2 pb-2">
+            <CollapsibleTrigger asChild>
+                <Button variant="ghost" className="w-full justify-start px-2">
+                    <Building2 className="mr-2 h-4 w-4" />
+                    <span>Vendors</span>
+                    <ChevronsUpDown className="ml-auto h-4 w-4" />
+                </Button>
+            </CollapsibleTrigger>
+          </div>
+           <SidebarMenu className="hidden group-data-[collapsible=icon]:flex">
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Vendors" size="icon" asChild>
+                    <CollapsibleTrigger>
+                        <Building2 />
+                    </CollapsibleTrigger>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+          </SidebarMenu>
+          <CollapsibleContent asChild>
+            <ScrollArea>
+                <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton><Building className="mr-2 h-4 w-4" />Halls</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton><Utensils className="mr-2 h-4 w-4" />Catering</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton><Car className="mr-2 h-4 w-4" />Cars</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton><Bus className="mr-2 h-4 w-4" />Buses</SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton><Camera className="mr-2 h-4 w-4" />Photographers</SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+                </SidebarGroup>
+            </ScrollArea>
+          </CollapsibleContent>
+        </Collapsible>
 
         <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen} className="mt-4 flex flex-col flex-1 min-h-0">
            <div className="group-data-[collapsible=icon]:hidden px-2 pb-2">
