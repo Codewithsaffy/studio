@@ -12,7 +12,6 @@ import {
   useSidebar,
   SidebarGroup,
   SidebarGroupLabel,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import {
   Collapsible,
@@ -29,12 +28,11 @@ import {
   Image as ImageIcon,
   MessageSquare,
   Mic,
-  PanelLeft,
   Search,
 } from 'lucide-react';
 
 export function LeftSidebar() {
-  const { state, isMobile } = useSidebar();
+  const { state } = useSidebar();
   const [isMac, setIsMac] = React.useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = React.useState(true);
 
@@ -99,8 +97,8 @@ export function LeftSidebar() {
                 </Button>
             </CollapsibleTrigger>
           </div>
-          <div className="group-data-[collapsible=icon]:block hidden p-2">
-             <SidebarMenuButton tooltip="History" size="icon" className="w-full" asChild>
+          <div className="group-data-[collapsible=icon]:flex hidden p-2 justify-center">
+             <SidebarMenuButton tooltip="History" size="icon" className="w-auto" asChild>
                 <CollapsibleTrigger>
                     <History />
                 </CollapsibleTrigger>
@@ -131,24 +129,13 @@ export function LeftSidebar() {
         </Collapsible>
       </SidebarContent>
       <SidebarFooter>
-         <div className="flex items-center justify-between p-2">
-            <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
-                    <AvatarFallback>M</AvatarFallback>
-                </Avatar>
-                <span className="text-sm font-medium group-data-[collapsible=icon]:hidden">
-                    User
-                </span>
-            </div>
-          {!isMobile && (
-            <SidebarTrigger
-              className={`transition-transform duration-300 ${
-                state === 'collapsed' ? 'rotate-180' : ''
-              }`}
-            >
-              <PanelLeft />
-            </SidebarTrigger>
-          )}
+         <div className="flex items-center gap-3 p-2">
+            <Avatar className="h-8 w-8">
+                <AvatarFallback>M</AvatarFallback>
+            </Avatar>
+            <span className="text-sm font-medium group-data-[collapsible=icon]:hidden">
+                User
+            </span>
         </div>
       </SidebarFooter>
     </Sidebar>
