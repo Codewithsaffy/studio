@@ -31,6 +31,7 @@ import {
   Mic,
   Search,
 } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export function LeftSidebar() {
   const { state } = useSidebar();
@@ -134,13 +135,18 @@ export function LeftSidebar() {
         </Collapsible>
       </SidebarContent>
       <SidebarFooter>
-         <div className="flex items-center gap-3 p-2">
-            <Avatar className="h-8 w-8">
-                <AvatarFallback>M</AvatarFallback>
-            </Avatar>
-            <span className="text-sm font-medium group-data-[collapsible=icon]:hidden">
-                User
-            </span>
+         <div className="flex items-center justify-between gap-3 p-2">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-8 w-8">
+                  <AvatarFallback>M</AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium group-data-[collapsible=icon]:hidden">
+                  User
+              </span>
+            </div>
+            <div className="group-data-[collapsible=icon]:hidden">
+              <ThemeToggle />
+            </div>
         </div>
       </SidebarFooter>
     </Sidebar>

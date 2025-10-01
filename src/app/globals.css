@@ -4,6 +4,53 @@
 
 @layer base {
   :root {
+    --background: 0 0% 100%; /* #FFFFFF */
+    --foreground: 285 22% 5%; /* #0D0A10 */
+
+    --card: 0 0% 96%; /* #F5F5F5 */
+    --card-foreground: 285 22% 5%; /* #0D0A10 */
+
+    --popover: 0 0% 100%; /* #FFFFFF */
+    --popover-foreground: 285 22% 5%; /* #0D0A10 */
+
+    --primary: 45 76% 52%; /* #D4AF37 */
+    --primary-foreground: 285 22% 5%; /* #0D0A10 */
+
+    --secondary: 345 100% 25%; /* #800020 */
+    --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+    
+    --muted: 0 0% 94%; /* #F0F0F0 */
+    --muted-foreground: 0 0% 40%; /* #666666 */
+    
+    --accent: 0 0% 96%; /* #F5F5F5 */
+    --accent-foreground: 285 22% 5%; /* #0D0A10 */
+    
+    --destructive: 0 84% 60%; /* #FF3B30 */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+    
+    --border: 0 0% 89%; /* #E3E3E3 */
+    --input: 0 0% 93%; /* #EDEDED */
+    --ring: 45 76% 52%; /* #D4AF37 */
+    
+    --chart-1: 45 76% 52%;
+    --chart-2: 345 100% 25%;
+    --chart-3: 352 28% 54%;
+    --chart-4: 43 89% 60%;
+    --chart-5: 27 87% 67%;
+    
+    --radius: 0.5rem;
+    
+    --sidebar-background: 0 0% 98%; /* #FAFAFA */
+    --sidebar-foreground: 285 22% 15%; /* #211A29 */
+    --sidebar-primary: 45 76% 52%; /* #D4AF37 */
+    --sidebar-primary-foreground: 285 22% 5%; /* #0D0A10 */
+    --sidebar-accent: 0 0% 94%; /* #F0F0F0 */
+    --sidebar-accent-foreground: 285 22% 5%; /* #0D0A10 */
+    --sidebar-border: 0 0% 90%; /* #E6E6E6 */
+    --sidebar-ring: 45 76% 52%; /* #D4AF37 */
+  }
+
+  .dark {
     --background: 285 22% 5%; /* #0D0A10 */
     --foreground: 0 0% 100%; /* #FFFFFF */
 
@@ -49,8 +96,6 @@
     --sidebar-border: 45 61% 33%; /* Approximation */
     --sidebar-ring: 45 76% 52%; /* #D4AF37 */
   }
-
-  /* The app is dark mode only, so no .dark class is needed */
 }
 
 @layer base {
