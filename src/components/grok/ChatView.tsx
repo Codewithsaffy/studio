@@ -70,8 +70,6 @@ export function ChatView() {
                 <h1 className="text-4xl font-bold tracking-tight sm:text-5xl heading-gradient">
                   Your Dream Wedding, Perfectly Planned.
                 </h1>
-                <p className="mt-4 text-xl text-primary">Apki Shadi, Humare Saath</p>
-                <div className="mt-4 w-48 h-px mx-auto bg-gradient-to-r from-transparent via-primary to-transparent"></div>
               </div>
               <PromptInput onSubmit={handleSubmit} isSending={isSending} isChatActive={isChatActive} />
               <div className="flex flex-wrap justify-center gap-2 mt-4">
