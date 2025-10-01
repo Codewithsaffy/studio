@@ -70,9 +70,9 @@ export function LeftSidebar() {
       <SidebarContent className="flex flex-col overflow-hidden">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Ask" isActive>
+            <SidebarMenuButton tooltip="Agent" isActive>
               <MessageSquare />
-              <span className="group-data-[collapsible=icon]:hidden">Ask</span>
+              <span className="group-data-[collapsible=icon]:hidden">Agent</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
