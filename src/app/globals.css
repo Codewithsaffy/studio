@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%; /* #FAFAFA */
-    --foreground: 345 100% 15%; /* #4d0013 - Dark Burgundy for text */
+    --background: 0 0% 98%;
+    --foreground: 240 10% 3.9%;
 
-    --card: 0 0% 100%; /* #FFFFFF */
-    --card-foreground: 345 100% 15%; /* #4d0013 */
+    --card: 330 25% 98%;
+    --card-foreground: 285 22% 5%;
 
-    --popover: 0 0% 100%; /* #FFFFFF */
-    --popover-foreground: 345 100% 15%; /* #4d0013 */
+    --popover: 330 25% 98%;
+    --popover-foreground: 285 22% 5%;
 
-    --primary: 45 76% 52%; /* #D4AF37 */
-    --primary-foreground: 285 22% 5%; /* #0D0A10 */
+    --primary: 45 76% 52%;
+    --primary-foreground: 285 22% 5%;
 
-    --secondary: 345 100% 25%; /* #800020 */
-    --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+    --secondary: 345 100% 25%;
+    --secondary-foreground: 0 0% 100%;
     
-    --muted: 0 0% 94%; /* #F0F0F0 */
-    --muted-foreground: 0 0% 40%; /* #666666 */
+    --muted: 330 20% 95%;
+    --muted-foreground: 304 3% 42%;
     
-    --accent: 0 0% 96%; /* #F5F5F5 */
-    --accent-foreground: 345 100% 15%; /* #4d0013 */
+    --accent: 330 20% 94%;
+    --accent-foreground: 285 22% 5%;
     
-    --destructive: 0 84% 60%; /* #FF3B30 */
-    --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
     
-    --border: 0 0% 89%; /* #E3E3E3 */
-    --input: 0 0% 93%; /* #EDEDED */
-    --ring: 45 76% 52%; /* #D4AF37 */
+    --border: 330 11% 89%;
+    --input: 330 11% 89%;
+    --ring: 45 76% 52%;
     
     --chart-1: 45 76% 52%;
     --chart-2: 345 100% 25%;
@@ -40,14 +40,14 @@
     
     --radius: 0.5rem;
     
-    --sidebar-background: 0 0% 98%; /* #FAFAFA */
-    --sidebar-foreground: 285 22% 15%; /* #211A29 */
-    --sidebar-primary: 45 76% 52%; /* #D4AF37 */
-    --sidebar-primary-foreground: 285 22% 5%; /* #0D0A10 */
-    --sidebar-accent: 0 0% 94%; /* #F0F0F0 */
-    --sidebar-accent-foreground: 285 22% 5%; /* #0D0A10 */
-    --sidebar-border: 0 0% 90%; /* #E6E6E6 */
-    --sidebar-ring: 45 76% 52%; /* #D4AF37 */
+    --sidebar-background: 330 25% 98%;
+    --sidebar-foreground: 285 22% 5%;
+    --sidebar-primary: 45 76% 52%;
+    --sidebar-primary-foreground: 285 22% 5%;
+    --sidebar-accent: 330 20% 94%;
+    --sidebar-accent-foreground: 285 22% 5%;
+    --sidebar-border: 330 11% 89%;
+    --sidebar-ring: 45 76% 52%;
   }
 
   .dark {
