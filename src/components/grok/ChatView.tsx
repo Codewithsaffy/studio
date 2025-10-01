@@ -7,8 +7,6 @@ import { useToast } from '@/hooks/use-toast';
 import { PromptInput } from '@/components/grok/PromptInput';
 import { ChatLog } from '@/components/grok/ChatLog';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import { Share2 } from 'lucide-react';
 
 export function ChatView() {
@@ -43,10 +41,6 @@ export function ChatView() {
               Share
               <Share2 className="ml-2 h-4 w-4" />
             </Button>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Switch id="private-mode" />
-              <Label htmlFor="private-mode">Private</Label>
-            </div>
           </>
         )}
       </header>
