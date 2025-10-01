@@ -6,13 +6,13 @@ import { useToast } from '@/hooks/use-toast';
 import { interpretUserPrompt } from '@/ai/flows/interpret-user-prompt';
 import { generateAiResponse } from '@/ai/flows/generate-ai-response';
 
-import { GrokLogo } from '@/components/grok/GrokLogo';
 import { PromptInput } from '@/components/grok/PromptInput';
 import { ChatLog } from '@/components/grok/ChatLog';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Share2 } from 'lucide-react';
+import { Avatar, AvatarFallback } from '../ui/avatar';
 
 export function ChatView() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -74,7 +74,6 @@ export function ChatView() {
           <ChatLog messages={messages} isSending={isSending}/>
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <GrokLogo className="w-16 h-16 text-foreground/50" />
             <h1 className="mt-4 text-5xl font-medium text-foreground/50">Grok</h1>
           </div>
         )}

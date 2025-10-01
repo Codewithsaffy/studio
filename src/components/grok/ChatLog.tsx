@@ -1,7 +1,6 @@
 import type { Message } from '@/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { GrokLogo } from './GrokLogo';
 import { Copy, RefreshCw, Share2, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 
@@ -16,15 +15,9 @@ export function ChatLog({ messages, isSending }: ChatLogProps) {
       {messages.map((message) => (
         <div key={message.id} className="flex gap-4 text-base">
           <div className="flex-shrink-0">
-            {message.role === 'user' ? (
-              <Avatar className="h-8 w-8">
-                <AvatarFallback>M</AvatarFallback>
-              </Avatar>
-            ) : (
-              <div className="h-8 w-8 rounded-full flex items-center justify-center">
-                  <GrokLogo className="h-8 w-8" />
-              </div>
-            )}
+            <Avatar className="h-8 w-8">
+              <AvatarFallback>{message.role === 'user' ? 'M' : 'G'}</AvatarFallback>
+            </Avatar>
           </div>
           <div className="flex-1">
             <p className="font-medium mb-2">
@@ -57,7 +50,9 @@ export function ChatLog({ messages, isSending }: ChatLogProps) {
       ))}
        {isSending && (
         <div className="flex gap-4 text-base">
-           <GrokLogo className="h-8 w-8 flex-shrink-0" />
+           <Avatar className="h-8 w-8 flex-shrink-0">
+              <AvatarFallback>G</AvatarFallback>
+            </Avatar>
             <div className="flex-1">
                 <p className="font-medium mb-2">Grok</p>
                 <div className="space-y-2">
