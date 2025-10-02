@@ -24,10 +24,11 @@ export function ChatView() {
   const isChatActive = activeConversation !== null;
 
   const handleSubmit = async (prompt: string) => {
-    const userMessage: Message = { role: 'user', content: prompt };
+    const userMessage: Message = { id: Date.now().toString(), role: 'user', content: prompt };
 
     // This is a mock response, replace with actual AI call
     const aiMessage: Message = {
+      id: (Date.now() + 1).toString(),
       role: 'assistant',
       content: `This is a simulated response to: "${prompt}"`,
     };

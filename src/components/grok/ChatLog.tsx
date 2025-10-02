@@ -13,9 +13,9 @@ interface ChatLogProps {
 export function ChatLog({ messages, isSending }: ChatLogProps) {
   return (
     <div className="space-y-8 px-4 md:px-8 max-w-4xl mx-auto">
-      {messages.map((message) => (
+      {messages.map((message, index) => (
         <div
-          key={message.id}
+          key={`${message.content}-${index}`}
           className={cn(
             'flex gap-4 text-base',
             message.role === 'user' ? 'justify-end' : ''
