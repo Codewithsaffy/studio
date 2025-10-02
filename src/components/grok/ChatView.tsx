@@ -88,7 +88,7 @@ export function ChatView() {
             isSending={isSending}
           />
         ) : (
-          <div className="flex flex-col items-center text-center px-4 pt-32">
+          <div className="flex flex-col items-center justify-center h-full text-center px-4">
             <div className="w-full max-w-4xl flex flex-col items-center justify-center gap-8">
               <div className="text-center">
                 <h1 className="text-4xl font-headline font-bold tracking-tight sm:text-6xl max-w-2xl mx-auto heading-gradient">
@@ -102,7 +102,7 @@ export function ChatView() {
                   isChatActive={isChatActive}
                 />
               </div>
-              <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 mt-2 w-full sm:w-auto">
+              <div className="flex  flex-wrap justify-center gap-2 w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="sm"
@@ -139,7 +139,7 @@ export function ChatView() {
 
       <div
         className={cn(
-          'absolute w-full max-w-4xl px-4 bottom-8 left-1/2 -translate-x-1/2 pb-1',
+          'absolute w-full max-w-4xl px-4 bottom-8 left-1/2 -translate-x-1/2',
           isChatActive ? '' : 'sm:hidden'
         )}
       >
