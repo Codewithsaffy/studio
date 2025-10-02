@@ -54,7 +54,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addMessage = async (message: Message) => {
-    setIsSending(true);
+    setIsSending(message.role === 'user');
     let updatedConversations = [...conversations];
     let targetConversationId = activeConversationId;
 
@@ -84,7 +84,9 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }
     
     saveConversations(updatedConversations);
-    setIsSending(false);
+    if (message.role === 'user') {
+      setIsSending(false);
+    }
   };
 
   const loadConversation = (id: string) => {
