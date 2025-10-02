@@ -1,6 +1,7 @@
+
 'use client';
 
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import type { Conversation, Message } from '@/types';
 
 const HISTORY_KEY = 'grok_chat_history';
@@ -41,56 +42,53 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const saveConversations = (updatedConversations: Conversation[]) => {
+  const saveToLocalStorage = (data: Conversation[]) => {
     try {
-      updatedConversations.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      setConversations(updatedConversations);
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedConversations));
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(data));
     } catch (error) {
       console.error("Failed to save chat history to localStorage", error);
     }
   };
 
-  const addMessage = async (messagesToAdd: Message | Message[]) => {
+  const addMessage = useCallback(async (messagesToAdd: Message | Message[]) => {
     const messages = Array.isArray(messagesToAdd) ? messagesToAdd : [messagesToAdd];
     if (messages.length === 0) return;
-  
-    setConversations(currentConversations => {
-      let conversationIndex = -1;
-      if (activeConversationId) {
-        conversationIndex = currentConversations.findIndex(c => c.id === activeConversationId);
+
+    if (activeConversationId) {
+      // Update existing conversation
+      const updatedConversations = conversations.map(convo => {
+        if (convo.id === activeConversationId) {
+          return {
+            ...convo,
+            messages: [...convo.messages, ...messages],
+          };
+        }
+        return convo;
+      });
+      // Move updated conversation to the top
+      const currentConvoIndex = updatedConversations.findIndex(c => c.id === activeConversationId);
+      if (currentConvoIndex > -1) {
+        const [currentConvo] = updatedConversations.splice(currentConvoIndex, 1);
+        updatedConversations.unshift(currentConvo);
       }
-  
-      let updatedConversations = [...currentConversations];
-  
-      if (conversationIndex !== -1) {
-        const updatedConversation = {
-          ...updatedConversations[conversationIndex],
-          messages: [...updatedConversations[conversationIndex].messages, ...messages],
-        };
-        updatedConversations.splice(conversationIndex, 1);
-        updatedConversations.unshift(updatedConversation);
-      } else {
-        const newConversation: Conversation = {
-          id: Date.now().toString(),
-          title: messages[0].content.split(' ').slice(0, 5).join(' '),
-          createdAt: new Date().toISOString(),
-          messages: messages,
-        };
-        updatedConversations.unshift(newConversation);
-        // This was the missing piece: set the new conversation as active immediately.
-        setActiveConversationId(newConversation.id);
-      }
-  
-      try {
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedConversations));
-      } catch (error) {
-        console.error("Failed to save chat history to localStorage", error);
-      }
-  
-      return updatedConversations;
-    });
-  };
+      setConversations(updatedConversations);
+      saveToLocalStorage(updatedConversations);
+    } else {
+      // Create a new conversation
+      const newConversation: Conversation = {
+        id: Date.now().toString(),
+        title: messages[0].content.split(' ').slice(0, 5).join(' '),
+        createdAt: new Date().toISOString(),
+        messages: messages,
+      };
+      
+      const updatedConversations = [newConversation, ...conversations];
+      setConversations(updatedConversations);
+      setActiveConversationId(newConversation.id); // This is the key change
+      saveToLocalStorage(updatedConversations);
+    }
+  }, [activeConversationId, conversations]);
+
 
   const loadConversation = (id: string) => {
     setActiveConversationId(id);
