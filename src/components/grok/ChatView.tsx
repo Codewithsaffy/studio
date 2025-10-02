@@ -102,7 +102,7 @@ export function ChatView() {
                   isChatActive={isChatActive}
                 />
               </div>
-              <div className="hidden sm:flex flex-wrap flex-col sm:flex-row justify-center gap-2 mt-2 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-2 mt-2 w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="sm"

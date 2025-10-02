@@ -88,7 +88,7 @@ export function PromptInput({ onSubmit, isSending, isChatActive }: PromptInputPr
           onKeyDown={handleKeyDown}
           placeholder={isChatActive ? 'How can Grok help?' : 'Mujhe 400 guests ke liye venue chahiye...'}
           className={cn(
-            "min-h-[3.5rem] w-full rounded-full pl-5 pr-28 focus-visible:ring-1 focus-visible:ring-ring resize-none overflow-hidden py-3.5",
+            "min-h-[3.5rem] placeholder:text-[12px] w-full rounded-full pl-5 pr-28 focus-visible:ring-1 focus-visible:ring-ring resize-none overflow-hidden py-4",
             isChatActive
               ? "bg-card border-border"
               : "bg-background/80 dark:bg-transparent border-primary shadow-[0_0_20px_rgba(212,175,55,0.2)]"
