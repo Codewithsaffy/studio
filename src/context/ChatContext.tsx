@@ -11,7 +11,7 @@ interface ChatContextType {
   isSending: boolean;
   loadConversation: (id: string) => void;
   startNewConversation: () => void;
-  addMessage: (message: Message) => Promise<void>;
+  addMessage: (message: Message | Message[]) => Promise<void>;
 }
 
 export const ChatContext = createContext<ChatContextType>({
@@ -33,7 +33,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       const storedHistory = localStorage.getItem(HISTORY_KEY);
       if (storedHistory) {
         const parsedHistory: Conversation[] = JSON.parse(storedHistory);
-        // Sort by date to ensure newest is first
         parsedHistory.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         setConversations(parsedHistory);
       }
@@ -44,7 +43,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
 
   const saveConversations = (updatedConversations: Conversation[]) => {
     try {
-      // Ensure newest is always first
       updatedConversations.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       setConversations(updatedConversations);
       localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedConversations));
@@ -53,40 +51,44 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const addMessage = async (message: Message) => {
-    setIsSending(message.role === 'user');
-    let updatedConversations = [...conversations];
-    let targetConversationId = activeConversationId;
+  const addMessage = async (messagesToAdd: Message | Message[]) => {
+    const messages = Array.isArray(messagesToAdd) ? messagesToAdd : [messagesToAdd];
+    if (messages.length === 0) return;
 
-    if (!targetConversationId) {
-      // Create a new conversation
-      const newConversation: Conversation = {
-        id: Date.now().toString(),
-        title: message.content.split(' ').slice(0, 5).join(' '),
-        createdAt: new Date().toISOString(),
-        messages: [message],
-      };
-      updatedConversations.unshift(newConversation); // Add to the beginning
-      targetConversationId = newConversation.id;
-      setActiveConversationId(targetConversationId);
-    } else {
-      // Find the existing conversation and add the message
-      const conversationIndex = updatedConversations.findIndex(c => c.id === targetConversationId);
-      if (conversationIndex !== -1) {
-        const updatedConversation = {
-          ...updatedConversations[conversationIndex],
-          messages: [...updatedConversations[conversationIndex].messages, message],
+    setConversations(currentConversations => {
+      let updatedConversations = [...currentConversations];
+      let targetConversationId = activeConversationId;
+  
+      if (!targetConversationId) {
+        const newConversation: Conversation = {
+          id: Date.now().toString(),
+          title: messages[0].content.split(' ').slice(0, 5).join(' '),
+          createdAt: new Date().toISOString(),
+          messages: messages,
         };
-        // Move the updated conversation to the top
-        updatedConversations.splice(conversationIndex, 1);
-        updatedConversations.unshift(updatedConversation);
+        updatedConversations.unshift(newConversation);
+        setActiveConversationId(newConversation.id);
+      } else {
+        const conversationIndex = updatedConversations.findIndex(c => c.id === targetConversationId);
+        if (conversationIndex !== -1) {
+          const updatedConversation = {
+            ...updatedConversations[conversationIndex],
+            messages: [...updatedConversations[conversationIndex].messages, ...messages],
+          };
+          updatedConversations.splice(conversationIndex, 1);
+          updatedConversations.unshift(updatedConversation);
+        }
       }
-    }
-    
-    saveConversations(updatedConversations);
-    if (message.role === 'user') {
-      setIsSending(false);
-    }
+      
+      // Persist to localStorage
+      try {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedConversations));
+      } catch (error) {
+        console.error("Failed to save chat history to localStorage", error);
+      }
+      
+      return updatedConversations;
+    });
   };
 
   const loadConversation = (id: string) => {

@@ -26,8 +26,6 @@ export function ChatView() {
   const handleSubmit = async (prompt: string) => {
     const userMessage: Message = { id: Date.now().toString(), role: 'user', content: prompt };
 
-    await addMessage(userMessage);
-
     // This is a mock response, replace with actual AI call
     const aiMessage: Message = {
       id: (Date.now() + 1).toString(),
@@ -38,7 +36,7 @@ export function ChatView() {
     try {
       // In a real scenario, you'd add the AI message after getting a response
       setTimeout(async () => {
-        await addMessage(aiMessage);
+        await addMessage([userMessage, aiMessage]);
       }, 500);
     } catch (error) {
       console.error(error);
