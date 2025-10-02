@@ -54,12 +54,23 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const addMessage = async (messagesToAdd: Message | Message[]) => {
     const messages = Array.isArray(messagesToAdd) ? messagesToAdd : [messagesToAdd];
     if (messages.length === 0) return;
-
-    setConversations(currentConversations => {
-      let updatedConversations = [...currentConversations];
-      let targetConversationId = activeConversationId;
   
-      if (!targetConversationId) {
+    setConversations(currentConversations => {
+      let conversationIndex = -1;
+      if (activeConversationId) {
+        conversationIndex = currentConversations.findIndex(c => c.id === activeConversationId);
+      }
+  
+      let updatedConversations = [...currentConversations];
+  
+      if (conversationIndex !== -1) {
+        const updatedConversation = {
+          ...updatedConversations[conversationIndex],
+          messages: [...updatedConversations[conversationIndex].messages, ...messages],
+        };
+        updatedConversations.splice(conversationIndex, 1);
+        updatedConversations.unshift(updatedConversation);
+      } else {
         const newConversation: Conversation = {
           id: Date.now().toString(),
           title: messages[0].content.split(' ').slice(0, 5).join(' '),
@@ -67,26 +78,16 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           messages: messages,
         };
         updatedConversations.unshift(newConversation);
+        // This was the missing piece: set the new conversation as active immediately.
         setActiveConversationId(newConversation.id);
-      } else {
-        const conversationIndex = updatedConversations.findIndex(c => c.id === targetConversationId);
-        if (conversationIndex !== -1) {
-          const updatedConversation = {
-            ...updatedConversations[conversationIndex],
-            messages: [...updatedConversations[conversationIndex].messages, ...messages],
-          };
-          updatedConversations.splice(conversationIndex, 1);
-          updatedConversations.unshift(updatedConversation);
-        }
       }
-      
-      // Persist to localStorage
+  
       try {
         localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedConversations));
       } catch (error) {
         console.error("Failed to save chat history to localStorage", error);
       }
-      
+  
       return updatedConversations;
     });
   };

@@ -79,7 +79,7 @@ export function ChatView() {
 
       <main
         className={`flex-1 overflow-y-auto transition-all duration-500 ${
-          isChatActive ? 'pb-40 pt-16' : ''
+          isChatActive ? 'pb-40 pt-16' : 'pb-40'
         }`}
       >
         {isChatActive && activeConversation ? (
