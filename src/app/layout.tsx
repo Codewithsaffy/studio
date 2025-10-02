@@ -5,8 +5,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { NextAuthProvider } from '@/components/NextAuthProvider';
 
 export const metadata: Metadata = {
-  title: 'Grok AI Chat',
-  description: 'An AI chat application called "Grok"',
+  title: 'MehfilAI',
+  description: 'Your smart wedding planning assistant with AI',
 };
 
 export default function RootLayout({
