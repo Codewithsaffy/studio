@@ -58,7 +58,7 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-full p-0 max-h-[90vh] flex flex-col">
+      <DialogContent className="max-w-4xl w-full p-0  max-h-[90vh] flex flex-col">
         <DialogHeader className="sr-only">
           <DialogTitle>{vendor.name}</DialogTitle>
         </DialogHeader>
@@ -204,7 +204,7 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
             </Tabs>
           </div>
         </div>
-        <div className="p-6 border-t bg-card sticky bottom-0">
+        <div className="p-6 border-t bg-card">
           <div className="flex justify-end gap-3">
              <Button variant="outline" size="lg"><Phone className="mr-2 h-4 w-4"/> Call</Button>
              <Button variant="outline" size="lg"><MessageSquare className="mr-2 h-4 w-4"/> WhatsApp</Button>
