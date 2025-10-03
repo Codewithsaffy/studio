@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
@@ -143,7 +144,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
         </div>
         
         {filteredVendors.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredVendors.map((vendor) => (
               <VendorCard
                 key={vendor.id}
