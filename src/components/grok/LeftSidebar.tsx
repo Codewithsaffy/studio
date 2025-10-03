@@ -19,7 +19,6 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,6 +39,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ChatContext } from "@/context/ChatContext";
 import { isToday, isYesterday, format } from "date-fns";
 import { Conversation } from "@/types";
+import { AuthButtons } from "../AuthButtons";
 
 export function LeftSidebar() {
   const { state } = useSidebar();
@@ -252,13 +252,8 @@ export function LeftSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <div className="flex items-center justify-between gap-3 p-2">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarFallback>M</AvatarFallback>
-            </Avatar>
-            <span className="text-sm font-medium group-data-[collapsible=icon]:hidden">
-              User
-            </span>
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <AuthButtons />
           </div>
           <div className="group-data-[collapsible=icon]:hidden">
             <ThemeToggle />

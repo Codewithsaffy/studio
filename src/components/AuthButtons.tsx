@@ -9,14 +9,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Github, Mail } from "lucide-react";
+import { LogOut, User as UserIcon } from "lucide-react";
 import Link from "next/link";
+import { useSidebar } from "./ui/sidebar";
 
 export function AuthButtons() {
   const { data: session, status } = useSession();
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
 
   if (status === "loading") {
-    return <div className="h-10 w-10 rounded-full bg-gray-200 animate-pulse" />;
+    return (
+      <div className="flex items-center gap-3">
+        <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+        <div className="h-4 w-20 rounded-md bg-muted animate-pulse group-data-[collapsible=icon]:hidden" />
+      </div>
+    );
   }
 
   if (session) {
@@ -25,9 +33,9 @@ export function AuthButtons() {
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="relative h-10 w-10 rounded-full mx-10"
+            className="w-full flex justify-start items-center gap-3 p-2 h-auto"
           >
-            <Avatar className="h-10 w-10">
+            <Avatar className="h-8 w-8">
               <AvatarImage
                 src={session.user?.image || ""}
                 alt={session.user?.name || "User"}
@@ -38,19 +46,17 @@ export function AuthButtons() {
                   "U"}
               </AvatarFallback>
             </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end" forceMount>
-          <div className="flex items-center justify-start gap-2 p-2">
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">
-                {session.user?.name}
+            <div className="flex flex-col items-start min-w-0 group-data-[collapsible=icon]:hidden">
+              <p className="text-sm font-medium leading-none truncate">
+                {session.user?.name || "User"}
               </p>
-              <p className="text-xs leading-none text-muted-foreground">
+              <p className="text-xs leading-none text-muted-foreground truncate">
                 {session.user?.email}
               </p>
             </div>
-          </div>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuItem
             onClick={() => signOut()}
             className="cursor-pointer"
@@ -63,11 +69,28 @@ export function AuthButtons() {
     );
   }
 
-  // When not authenticated, show login button that goes to login page
+  if (isCollapsed) {
+    return (
+      <Link href="/login" className="w-full">
+        <Button
+          variant="ghost"
+          className="w-full flex justify-center items-center gap-3 p-2 h-auto"
+        >
+          <UserIcon className="h-5 w-5" />
+        </Button>
+      </Link>
+    );
+  }
+
   return (
-    <Link href="/login" className="mx-10 flex items-center gap-2">
-      <Mail className="h-4 w-4" />
-      Login
+    <Link href="/login" className="w-full">
+      <Button
+        variant="ghost"
+        className="w-full flex justify-start items-center gap-3 p-2 h-auto"
+      >
+        <UserIcon className="h-5 w-5" />
+        <span className="font-medium text-sm">Login</span>
+      </Button>
     </Link>
   );
 }
