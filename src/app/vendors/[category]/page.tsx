@@ -27,7 +27,11 @@ export type Filters = {
   sortBy: string;
 };
 
-type Params = Promise<{ category: string }>;
+interface CategoryPageProps {
+  params: {
+    category: string;
+  };
+}
 
 const VENDORS_PER_PAGE = 9;
 const VALID_CATEGORIES = ["halls", "catering", "photography", "cars", "buses"];
@@ -49,10 +53,8 @@ function getCategoryFromSlug(slug: string): string {
   }
 }
 
-export default function CategoryPage(props: { params: Params }) {
-  const params = use(props.params);
-  const category = params.category;
-  console.log(category)
+export default function CategoryPage({ params }: CategoryPageProps) {
+  const { category } = params;
 
   if (!VALID_CATEGORIES.includes(category)) {
     notFound();
