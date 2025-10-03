@@ -8,6 +8,15 @@ import VendorCard from '@/components/vendors/VendorCard';
 import VendorDetailModal from '@/components/vendors/VendorDetailModal';
 import VendorFilters from '@/components/vendors/VendorFilters';
 import { Button } from '@/components/ui/button';
+import { 
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationLink,
+  PaginationEllipsis
+} from '@/components/ui/pagination';
 
 export type Filters = {
   categories: string[];
@@ -18,6 +27,8 @@ export type Filters = {
   minRating: number;
   sortBy: string;
 };
+
+const VENDORS_PER_PAGE = 9;
 
 export default function VendorsPage() {
   const [filters, setFilters] = useState<Filters>({
@@ -31,6 +42,7 @@ export default function VendorsPage() {
   });
 
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredVendors = useMemo(() => {
     let vendors = [...dummyVendors];
@@ -94,6 +106,14 @@ export default function VendorsPage() {
     }
     return vendors;
   }, [filters]);
+  
+  const totalPages = Math.ceil(filteredVendors.length / VENDORS_PER_PAGE);
+
+  const paginatedVendors = useMemo(() => {
+    const startIndex = (currentPage - 1) * VENDORS_PER_PAGE;
+    const endIndex = startIndex + VENDORS_PER_PAGE;
+    return filteredVendors.slice(startIndex, endIndex);
+  }, [filteredVendors, currentPage]);
 
   const clearFilters = () => {
     setFilters({
@@ -105,6 +125,14 @@ export default function VendorsPage() {
       minRating: 0,
       sortBy: 'recommended',
     });
+    setCurrentPage(1);
+  }
+  
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      window.scrollTo(0, 0);
+    }
   }
 
   return (
@@ -122,9 +150,9 @@ export default function VendorsPage() {
           </Button>
         </div>
         
-        {filteredVendors.length > 0 ? (
+        {paginatedVendors.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredVendors.map((vendor) => (
+            {paginatedVendors.map((vendor) => (
               <VendorCard
                 key={vendor.id}
                 vendor={vendor}
@@ -139,6 +167,35 @@ export default function VendorsPage() {
             <p className="text-muted-foreground mb-4">Try adjusting your filters to find the perfect match.</p>
             <Button onClick={clearFilters}>Clear All Filters</Button>
           </div>
+        )}
+
+        {totalPages > 1 && (
+          <Pagination className="mt-12">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                />
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, i) => (
+                <PaginationItem key={i}>
+                  <PaginationLink 
+                    onClick={() => handlePageChange(i + 1)}
+                    isActive={currentPage === i + 1}
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         )}
       </main>
 
