@@ -28,7 +28,7 @@ import { Star, MapPin, Tag, Phone, MessageSquare, Briefcase, Images, Star as Sta
 import type { Vendor } from '@/lib/data';
 import { Slider } from '../ui/slider';
 import { cn } from '@/lib/utils';
-import { addDays, format, isBefore } from 'date-fns';
+import { addDays, format, isBefore, startOfToday } from 'date-fns';
 
 interface VendorDetailModalProps {
   vendor: Vendor;
@@ -37,7 +37,7 @@ interface VendorDetailModalProps {
 }
 
 export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDetailModalProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [guests, setGuests] = useState(vendor.capacity ? parseInt(vendor.capacity.split('-')[0]) || 200 : 200);
 
   const isDateBooked = (date: Date) => {
@@ -45,7 +45,7 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
   }
   
   const isDatePast = (date: Date) => {
-    return isBefore(date, new Date());
+    return isBefore(date, startOfToday());
   }
 
   const handleDateSelect = (date: Date | undefined) => {
@@ -54,15 +54,16 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
     }
   };
 
-  const images = [vendor.image, "https://picsum.photos/seed/2/800/600", "https://picsum.photos/seed/3/800/600", "https://picsum.photos/seed/4/800/600", "https://picsum.photos/seed/5/800/600"];
+  const images = [vendor.image, "https://picsum.photos/seed/vendor2/800/600", "https://picsum.photos/seed/vendor3/800/600", "https://picsum.photos/seed/vendor4/800/600", "https://picsum.photos/seed/vendor5/800/600"];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl w-full p-0 max-h-[90vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle className="sr-only">{vendor.name}</DialogTitle>
+        <DialogHeader className="sr-only">
+          <DialogTitle>{vendor.name}</DialogTitle>
         </DialogHeader>
-        <div className="overflow-y-auto">
+        
+        <div className="flex-1 overflow-y-auto">
           <Carousel className="w-full">
             <CarouselContent>
               {images.map((img, index) => (
@@ -101,9 +102,9 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
               
               <TabsContent value="overview" className="mt-4">
                 <p className="text-muted-foreground mb-4">Detailed vendor description coming soon. For now, enjoy the key features and contact information.</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h4 className="font-semibold mb-2">Features</h4>
+                    <h4 className="font-semibold mb-3">Features</h4>
                     <ul className="space-y-2 text-sm">
                       {vendor.features.map(f => (
                         <li key={f} className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500"/>{f}</li>
@@ -111,7 +112,7 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
                     </ul>
                   </div>
                   <div className="space-y-2 text-sm">
-                    <h4 className="font-semibold mb-2">Details</h4>
+                    <h4 className="font-semibold mb-3">Details</h4>
                     <p className="flex items-center gap-2"><Users className="h-4 w-4 text-muted-foreground"/>Capacity: {vendor.capacity}</p>
                     <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-muted-foreground"/>Contact: {vendor.phone}</p>
                     <p className="flex items-center gap-2"><MapPin className="h-4 w-4 text-muted-foreground"/>Location: {vendor.location}</p>
@@ -125,8 +126,11 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
                     <p>Per Head: <span className="font-bold text-lg">PKR {vendor.pricePerHead.toLocaleString()}</span></p>
                     <div className="mt-4">
                       <label htmlFor="guests" className="block text-sm font-medium mb-2">Number of Guests: {guests}</label>
-                      <Slider defaultValue={[guests]} max={1000} step={10} onValueChange={(value) => setGuests(value[0])} />
-                      <p className="text-right text-sm text-muted-foreground mt-1">Min: 200, Max: 1000</p>
+                      <Slider defaultValue={[guests]} max={1000} min={100} step={10} onValueChange={(value) => setGuests(value[0])} />
+                      <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                        <span>Min: 100</span>
+                        <span>Max: 1000</span>
+                      </div>
                     </div>
                      <p className="text-xl font-bold mt-4">Total Estimated Cost: <span className="text-primary">PKR {(guests * vendor.pricePerHead).toLocaleString()}</span></p>
                   </div>
@@ -166,7 +170,7 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
                     }}
                     modifiersClassNames={{
                       booked: 'bg-destructive/80 text-destructive-foreground',
-                      past: 'opacity-50'
+                      past: 'opacity-50 line-through'
                     }}
                     disabled={(date) => isDatePast(date)}
                     numberOfMonths={2}
@@ -200,7 +204,7 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
             </Tabs>
           </div>
         </div>
-        <div className="p-6 border-t bg-background sticky bottom-0">
+        <div className="p-6 border-t bg-card sticky bottom-0">
           <div className="flex justify-end gap-3">
              <Button variant="outline" size="lg"><Phone className="mr-2 h-4 w-4"/> Call</Button>
              <Button variant="outline" size="lg"><MessageSquare className="mr-2 h-4 w-4"/> WhatsApp</Button>
