@@ -3,6 +3,9 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from '@/components/theme-provider';
 import { NextAuthProvider } from '@/components/NextAuthProvider';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { LeftSidebar } from '@/components/grok/LeftSidebar';
+import { type CSSProperties } from 'react';
 
 export const metadata: Metadata = {
   title: 'MehfilAI',
@@ -29,7 +32,19 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <SidebarProvider
+              style={
+                {
+                  '--sidebar-width': '260px',
+                  '--sidebar-width-icon': '80px',
+                } as CSSProperties
+              }
+            >
+              <LeftSidebar />
+              <SidebarInset>
+                {children}
+              </SidebarInset>
+            </SidebarProvider>
             <Toaster />
           </ThemeProvider>
         </NextAuthProvider>

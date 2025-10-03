@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useContext } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -37,12 +39,14 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ChatContext } from "@/context/ChatContext";
-import { isToday, isYesterday, format } from "date-fns";
-import { Conversation } from "@/types";
+import { isToday, isYesterday } from "date-fns";
+import type { Conversation } from "@/types";
 import { AuthButtons } from "../AuthButtons";
+import { cn } from "@/lib/utils";
 
 export function LeftSidebar() {
   const { state } = useSidebar();
+  const pathname = usePathname();
   const [isMac, setIsMac] = React.useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = React.useState(true);
   const [isVendorsOpen, setIsVendorsOpen] = React.useState(true);
@@ -71,8 +75,6 @@ export function LeftSidebar() {
       } else if (isYesterday(date)) {
         groups.Yesterday.push(convo);
       } else {
-        // For simplicity, we can group by month or just older.
-        // This example is simplified.
         const diffDays =
           (new Date().getTime() - date.getTime()) / (1000 * 3600 * 24);
         if (diffDays <= 7) {
@@ -87,6 +89,14 @@ export function LeftSidebar() {
   };
 
   const groupedConversations = groupConversationsByDate(conversations);
+  
+  const vendorLinks = [
+    { href: "/vendors/halls", icon: Building, label: "Halls" },
+    { href: "/vendors/catering", icon: Utensils, label: "Catering" },
+    { href: "/vendors/cars", icon: Car, label: "Cars" },
+    { href: "/vendors/buses", icon: Bus, label: "Buses" },
+    { href: "/vendors/photography", icon: Camera, label: "Photographers" },
+  ];
 
   return (
     <Sidebar collapsible="icon">
@@ -111,28 +121,34 @@ export function LeftSidebar() {
       <SidebarContent className="flex flex-col overflow-hidden">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Agent" isActive>
-              <MessageSquare />
-              <span className="group-data-[collapsible=icon]:hidden">
-                Agent
-              </span>
-            </SidebarMenuButton>
+            <Link href="/" className="w-full">
+              <SidebarMenuButton tooltip="Agent" isActive={pathname === '/'}>
+                <MessageSquare />
+                <span className="group-data-[collapsible=icon]:hidden">
+                  Agent
+                </span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Inbox">
-              <Inbox />
-              <span className="group-data-[collapsible=icon]:hidden">
-                Inbox
-              </span>
-            </SidebarMenuButton>
+             <Link href="/inbox" className="w-full">
+              <SidebarMenuButton tooltip="Inbox" isActive={pathname.startsWith('/inbox')}>
+                <Inbox />
+                <span className="group-data-[collapsible=icon]:hidden">
+                  Inbox
+                </span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Bookings">
-              <Book />
-              <span className="group-data-[collapsible=icon]:hidden">
-                Bookings
-              </span>
-            </SidebarMenuButton>
+            <Link href="/bookings" className="w-full">
+              <SidebarMenuButton tooltip="Bookings" isActive={pathname.startsWith('/bookings')}>
+                <Book />
+                <span className="group-data-[collapsible=icon]:hidden">
+                  Bookings
+                </span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
         </SidebarMenu>
 
@@ -141,58 +157,42 @@ export function LeftSidebar() {
           onOpenChange={setIsVendorsOpen}
           className="mt-4 flex flex-col min-h-0"
         >
-          <div className="group-data-[collapsible=icon]:hidden px-2 pb-2">
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start px-2">
-                <Building2 className="mr-2 h-4 w-4" />
-                <span>Vendors</span>
-                <ChevronsUpDown className="ml-auto h-4 w-4" />
-              </Button>
+          <div className={cn("group-data-[collapsible=icon]:hidden px-2 pb-2", isCollapsed && "hidden")}>
+             <CollapsibleTrigger asChild>
+                <Link href="/vendors">
+                  <Button variant="ghost" className={cn("w-full justify-start px-2", pathname.startsWith('/vendors') && "bg-sidebar-accent text-sidebar-accent-foreground")}>
+                    <Building2 className="mr-2 h-4 w-4" />
+                    <span>Vendors</span>
+                    <ChevronsUpDown className="ml-auto h-4 w-4" />
+                  </Button>
+                </Link>
             </CollapsibleTrigger>
           </div>
-          <SidebarMenu className="hidden group-data-[collapsible=icon]:flex">
-            <SidebarMenuItem>
-              <SidebarMenuButton tooltip="Vendors" asChild>
-                <CollapsibleTrigger>
-                  <Building2 />
-                </CollapsibleTrigger>
-              </SidebarMenuButton>
+          <SidebarMenu className={cn("hidden", !isCollapsed && "hidden", isCollapsed && "flex")}>
+             <SidebarMenuItem>
+                <Link href="/vendors" className="w-full">
+                  <SidebarMenuButton tooltip="Vendors" asChild isActive={pathname.startsWith('/vendors')}>
+                    <CollapsibleTrigger>
+                      <Building2 />
+                    </CollapsibleTrigger>
+                  </SidebarMenuButton>
+                </Link>
             </SidebarMenuItem>
           </SidebarMenu>
           <CollapsibleContent asChild>
             <ScrollArea>
               <SidebarGroup className="group-data-[collapsible=icon]:hidden">
                 <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Building className="mr-2 h-4 w-4" />
-                      Halls
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Utensils className="mr-2 h-4 w-4" />
-                      Catering
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Car className="mr-2 h-4 w-4" />
-                      Cars
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Bus className="mr-2 h-4 w-4" />
-                      Buses
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Camera className="mr-2 h-4 w-4" />
-                      Photographers
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                   {vendorLinks.map((link) => (
+                    <SidebarMenuItem key={link.href}>
+                      <Link href={link.href} className="w-full">
+                        <SidebarMenuButton isActive={pathname === link.href}>
+                          <link.icon className="mr-2 h-4 w-4" />
+                          {link.label}
+                        </SidebarMenuButton>
+                      </Link>
+                    </SidebarMenuItem>
+                  ))}
                 </SidebarMenu>
               </SidebarGroup>
             </ScrollArea>
