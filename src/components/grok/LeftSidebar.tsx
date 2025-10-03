@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useContext } from "react";
@@ -14,6 +15,8 @@ import {
   useSidebar,
   SidebarGroup,
   SidebarGroupLabel,
+  SidebarRail,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
   Collapsible,
@@ -36,6 +39,7 @@ import {
   Search,
   Utensils,
   Book,
+  PanelLeft,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ChatContext } from "@/context/ChatContext";
@@ -45,7 +49,7 @@ import { AuthButtons } from "../AuthButtons";
 import { cn } from "@/lib/utils";
 
 export function LeftSidebar() {
-  const { state } = useSidebar();
+  const { state, toggleSidebar } = useSidebar();
   const pathname = usePathname();
   const [isMac, setIsMac] = React.useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = React.useState(true);
@@ -100,6 +104,7 @@ export function LeftSidebar() {
 
   return (
     <Sidebar collapsible="icon">
+      <SidebarRail />
       <SidebarHeader>
         {isCollapsed ? (
           <SidebarMenuButton tooltip="Search" className="w-full">
@@ -258,6 +263,11 @@ export function LeftSidebar() {
           <div className="group-data-[collapsible=icon]:hidden">
             <ThemeToggle />
           </div>
+        </div>
+        <div className={cn("flex items-center p-2", isCollapsed ? "justify-center" : "justify-end")}>
+            <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+              <PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/>
+            </Button>
         </div>
       </SidebarFooter>
     </Sidebar>
