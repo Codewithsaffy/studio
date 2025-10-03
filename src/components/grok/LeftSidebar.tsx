@@ -163,25 +163,27 @@ export function LeftSidebar() {
           className="mt-4 flex flex-col min-h-0"
         >
           <div className={cn("group-data-[collapsible=icon]:hidden px-2 pb-2", isCollapsed && "hidden")}>
-             <CollapsibleTrigger asChild>
-                <Link href="/vendors">
-                  <Button variant="ghost" className={cn("w-full justify-start px-2", pathname.startsWith('/vendors') && "bg-sidebar-accent text-sidebar-accent-foreground")}>
-                    <Building2 className="mr-2 h-4 w-4" />
-                    <span>Vendors</span>
-                    <ChevronsUpDown className="ml-auto h-4 w-4" />
-                  </Button>
-                </Link>
-            </CollapsibleTrigger>
+            <div className={cn("w-full justify-start px-2 flex items-center rounded-md", pathname.startsWith('/vendors') && "bg-sidebar-accent text-sidebar-accent-foreground")}>
+              <Link href="/vendors" className="flex-1 flex items-center p-2">
+                  <Building2 className="mr-2 h-4 w-4" />
+                  <span>Vendors</span>
+              </Link>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
+                  <ChevronsUpDown className="h-4 w-4" />
+                </Button>
+              </CollapsibleTrigger>
+            </div>
           </div>
           <SidebarMenu className={cn("hidden", !isCollapsed && "hidden", isCollapsed && "flex")}>
              <SidebarMenuItem>
-                <Link href="/vendors" className="w-full">
                   <SidebarMenuButton tooltip="Vendors" asChild isActive={pathname.startsWith('/vendors')}>
                     <CollapsibleTrigger>
-                      <Building2 />
+                      <Link href="/vendors">
+                        <Building2 />
+                      </Link>
                     </CollapsibleTrigger>
                   </SidebarMenuButton>
-                </Link>
             </SidebarMenuItem>
           </SidebarMenu>
           <CollapsibleContent asChild>
