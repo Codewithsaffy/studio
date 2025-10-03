@@ -21,8 +21,7 @@ export type Filters = {
 
 const VALID_CATEGORIES = ['halls', 'catering', 'photography', 'cars', 'buses'];
 
-export default function CategoryPage({ params }: { params: { category: string } }) {
-  const { category } = params;
+export default function CategoryPage({ params: { category } }: { params: { category: string } }) {
 
   if (!VALID_CATEGORIES.includes(category)) {
     notFound();
