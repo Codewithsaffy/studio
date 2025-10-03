@@ -4,6 +4,8 @@ import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog';
 import {
   Carousel,
@@ -57,6 +59,9 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl w-full p-0 max-h-[90vh] flex flex-col">
+        <DialogHeader>
+          <DialogTitle className="sr-only">{vendor.name}</DialogTitle>
+        </DialogHeader>
         <div className="overflow-y-auto">
           <Carousel className="w-full">
             <CarouselContent>
