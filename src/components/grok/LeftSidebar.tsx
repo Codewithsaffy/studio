@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useContext } from "react";
@@ -93,7 +92,7 @@ export function LeftSidebar() {
   };
 
   const groupedConversations = groupConversationsByDate(conversations);
-  
+
   const vendorLinks = [
     { href: "/vendors/halls", icon: Building, label: "Halls" },
     { href: "/vendors/catering", icon: Utensils, label: "Catering" },
@@ -127,7 +126,7 @@ export function LeftSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <Link href="/" className="w-full">
-              <SidebarMenuButton tooltip="Agent" isActive={pathname === '/'}>
+              <SidebarMenuButton tooltip="Agent" isActive={pathname === "/"}>
                 <MessageSquare />
                 <span className="group-data-[collapsible=icon]:hidden">
                   Agent
@@ -136,8 +135,11 @@ export function LeftSidebar() {
             </Link>
           </SidebarMenuItem>
           <SidebarMenuItem>
-             <Link href="/inbox" className="w-full">
-              <SidebarMenuButton tooltip="Inbox" isActive={pathname.startsWith('/inbox')}>
+            <Link href="/inbox" className="w-full">
+              <SidebarMenuButton
+                tooltip="Inbox"
+                isActive={pathname.startsWith("/inbox")}
+              >
                 <Inbox />
                 <span className="group-data-[collapsible=icon]:hidden">
                   Inbox
@@ -147,7 +149,10 @@ export function LeftSidebar() {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <Link href="/bookings" className="w-full">
-              <SidebarMenuButton tooltip="Bookings" isActive={pathname.startsWith('/bookings')}>
+              <SidebarMenuButton
+                tooltip="Bookings"
+                isActive={pathname.startsWith("/bookings")}
+              >
                 <Book />
                 <span className="group-data-[collapsible=icon]:hidden">
                   Bookings
@@ -162,35 +167,60 @@ export function LeftSidebar() {
           onOpenChange={setIsVendorsOpen}
           className="mt-4 flex flex-col min-h-0"
         >
-          <div className={cn("group-data-[collapsible=icon]:hidden px-2 pb-2", isCollapsed && "hidden")}>
-            <div className={cn("w-full justify-start px-2 flex items-center rounded-md", pathname.startsWith('/vendors') && "bg-sidebar-accent text-sidebar-accent-foreground")}>
+          <div
+            className={cn(
+              "group-data-[collapsible=icon]:hidden px-2 pb-2",
+              isCollapsed && "hidden"
+            )}
+          >
+            <div
+              className={cn(
+                "w-full justify-start px-2 flex items-center rounded-md",
+                pathname.startsWith("/vendors") &&
+                  "bg-sidebar-accent text-sidebar-accent-foreground"
+              )}
+            >
               <Link href="/vendors" className="flex-1 flex items-center p-2">
-                  <Building2 className="mr-2 h-4 w-4" />
-                  <span>Vendors</span>
+                <Building2 className="mr-2 h-4 w-4" />
+                <span>Vendors</span>
               </Link>
               <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 shrink-0"
+                >
                   <ChevronsUpDown className="h-4 w-4" />
                 </Button>
               </CollapsibleTrigger>
             </div>
           </div>
-          <SidebarMenu className={cn("hidden", !isCollapsed && "hidden", isCollapsed && "flex")}>
-             <SidebarMenuItem>
-                  <SidebarMenuButton tooltip="Vendors" asChild isActive={pathname.startsWith('/vendors')}>
-                    <CollapsibleTrigger>
-                      <Link href="/vendors">
-                        <Building2 />
-                      </Link>
-                    </CollapsibleTrigger>
-                  </SidebarMenuButton>
+          <SidebarMenu
+            className={cn(
+              "hidden",
+              !isCollapsed && "hidden",
+              isCollapsed && "flex"
+            )}
+          >
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                tooltip="Vendors"
+                asChild
+                isActive={pathname.startsWith("/vendors")}
+              >
+                <CollapsibleTrigger>
+                  <Link href="/vendors">
+                    <Building2 />
+                  </Link>
+                </CollapsibleTrigger>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
           <CollapsibleContent asChild>
             <ScrollArea>
               <SidebarGroup className="group-data-[collapsible=icon]:hidden">
                 <SidebarMenu>
-                   {vendorLinks.map((link) => (
+                  {vendorLinks.map((link) => (
                     <SidebarMenuItem key={link.href}>
                       <Link href={link.href} className="w-full">
                         <SidebarMenuButton isActive={pathname === link.href}>
@@ -266,10 +296,20 @@ export function LeftSidebar() {
             <ThemeToggle />
           </div>
         </div>
-        <div className={cn("flex items-center p-2", isCollapsed ? "justify-center" : "justify-end")}>
-            <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-              <PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/>
-            </Button>
+        <div
+          className={cn(
+            "flex items-center p-2",
+            isCollapsed ? "justify-center" : "justify-end"
+          )}
+        >
+          <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+            <PanelLeft
+              className={cn(
+                "h-5 w-5 transition-transform",
+                isCollapsed && "rotate-180"
+              )}
+            />
+          </Button>
         </div>
       </SidebarFooter>
     </Sidebar>
