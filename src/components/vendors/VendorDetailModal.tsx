@@ -158,12 +158,12 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
               </TabsContent>
 
               <TabsContent value="availability" className="mt-4">
-                <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col lg:flex-row gap-4">
                   <Calendar
                     mode="single"
                     selected={selectedDate}
                     onSelect={handleDateSelect}
-                    className="rounded-md border"
+                    className="rounded-md border mx-auto"
                     modifiers={{ 
                       booked: (date) => isDateBooked(date),
                       past: (date) => isDatePast(date)
@@ -173,7 +173,6 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
                       past: 'opacity-50 line-through'
                     }}
                     disabled={(date) => isDatePast(date)}
-                    numberOfMonths={2}
                   />
                   <div className="flex-1">
                     <h4 className="font-semibold mb-2">Availability Check</h4>
@@ -194,9 +193,10 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
                       <p>Select a date to check availability.</p>
                     )}
                     <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-                      <p className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-emerald-500"></span>Available</p>
-                      <p className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-destructive"></span>Booked</p>
-                      <p className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-muted"></span>Past</p>
+                      <h5 className="font-medium text-foreground mb-2">Legend</h5>
+                      <p className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-emerald-500/20 border border-emerald-500"></span>Available</p>
+                      <p className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-destructive/80 border border-destructive"></span>Booked</p>
+                      <p className="flex items-center gap-2"><span className="h-4 w-4 rounded-full bg-muted border"></span>Past</p>
                     </div>
                   </div>
                 </div>
