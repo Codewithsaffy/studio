@@ -1,3 +1,4 @@
+
 "use client"
 
 import { SidebarTrigger } from "@/components/ui/sidebar"
@@ -35,7 +36,6 @@ export function Header() {
           <path d="M4 12h16" />
           <path d="M4 18h16" />
         </svg>
-        <span className="sr-only">Toggle navigation menu</span>
       </SidebarTrigger>
       <h1 className="text-lg font-semibold">{title}</h1>
     </header>
