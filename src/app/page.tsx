@@ -9,6 +9,7 @@ import {
 import { LeftSidebar } from '@/components/grok/LeftSidebar';
 import { ChatView } from '@/components/grok/ChatView';
 import { ChatProvider } from '@/context/ChatContext';
+import { AuthButtons } from '@/components/AuthButtons';
 
 export default function Home() {
   return (
@@ -25,6 +26,9 @@ export default function Home() {
         <SidebarInset>
           <div className="absolute top-4 left-4 z-20">
             <SidebarTrigger />
+          </div>
+          <div className="absolute top-4 right-4 z-20">
+            <AuthButtons />
           </div>
           <ChatView />
         </SidebarInset>

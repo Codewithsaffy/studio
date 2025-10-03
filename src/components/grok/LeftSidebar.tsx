@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -12,16 +12,16 @@ import {
   useSidebar,
   SidebarGroup,
   SidebarGroupLabel,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/collapsible";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Building2,
   Building,
@@ -35,11 +35,11 @@ import {
   Search,
   Utensils,
   Book,
-} from 'lucide-react';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { ChatContext } from '@/context/ChatContext';
-import { isToday, isYesterday, format } from 'date-fns';
-import { Conversation } from '@/types';
+} from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { ChatContext } from "@/context/ChatContext";
+import { isToday, isYesterday, format } from "date-fns";
+import { Conversation } from "@/types";
 
 export function LeftSidebar() {
   const { state } = useSidebar();
@@ -51,17 +51,17 @@ export function LeftSidebar() {
     useContext(ChatContext);
 
   React.useEffect(() => {
-    setIsMac(navigator.platform.toUpperCase().indexOf('MAC') >= 0);
+    setIsMac(navigator.platform.toUpperCase().indexOf("MAC") >= 0);
   }, []);
 
-  const isCollapsed = state === 'collapsed';
+  const isCollapsed = state === "collapsed";
 
   const groupConversationsByDate = (convos: Conversation[]) => {
     const groups: { [key: string]: Conversation[] } = {
       Today: [],
       Yesterday: [],
-      'Previous 7 Days': [],
-      'Previous 30 Days': [],
+      "Previous 7 Days": [],
+      "Previous 30 Days": [],
     };
 
     convos.forEach((convo) => {
@@ -73,11 +73,12 @@ export function LeftSidebar() {
       } else {
         // For simplicity, we can group by month or just older.
         // This example is simplified.
-        const diffDays = (new Date().getTime() - date.getTime()) / (1000 * 3600 * 24);
+        const diffDays =
+          (new Date().getTime() - date.getTime()) / (1000 * 3600 * 24);
         if (diffDays <= 7) {
-          groups['Previous 7 Days'].push(convo)
+          groups["Previous 7 Days"].push(convo);
         } else {
-          groups['Previous 30 Days'].push(convo);
+          groups["Previous 30 Days"].push(convo);
         }
       }
     });
@@ -91,7 +92,7 @@ export function LeftSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader>
         {isCollapsed ? (
-          <SidebarMenuButton tooltip="Search" size="icon" className="w-full">
+          <SidebarMenuButton tooltip="Search" className="w-full">
             <Search />
           </SidebarMenuButton>
         ) : (
@@ -102,7 +103,7 @@ export function LeftSidebar() {
               className="pl-9 bg-background focus-visible:ring-sidebar-ring"
             />
             <kbd className="absolute top-1/2 -translate-y-1/2 right-3 hidden items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground group-data-[collapsible=icon]:hidden md:flex">
-              <span className="text-xs">{isMac ? '⌘' : 'Ctrl+'}</span>K
+              <span className="text-xs">{isMac ? "⌘" : "Ctrl+"}</span>K
             </kbd>
           </div>
         )}
@@ -151,7 +152,7 @@ export function LeftSidebar() {
           </div>
           <SidebarMenu className="hidden group-data-[collapsible=icon]:flex">
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip="Vendors" size="icon" asChild>
+              <SidebarMenuButton tooltip="Vendors" asChild>
                 <CollapsibleTrigger>
                   <Building2 />
                 </CollapsibleTrigger>
@@ -214,7 +215,7 @@ export function LeftSidebar() {
           </div>
           <SidebarMenu className="hidden group-data-[collapsible=icon]:flex">
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip="History" size="icon" asChild>
+              <SidebarMenuButton tooltip="History" asChild>
                 <CollapsibleTrigger>
                   <History />
                 </CollapsibleTrigger>
