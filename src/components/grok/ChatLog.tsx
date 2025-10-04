@@ -1,7 +1,7 @@
 import type { Message } from '@/types';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Copy, RefreshCw, Share2, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { Copy, RefreshCw, Share2, ThumbsDown, ThumbsUp, Bot, User } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { cn } from '@/lib/utils';
 
@@ -12,82 +12,82 @@ interface ChatLogProps {
 
 export function ChatLog({ messages, isSending }: ChatLogProps) {
   return (
-    <div className="space-y-8 px-4 md:px-8 max-w-4xl mx-auto">
+    <div className="space-y-6 px-4 md:px-6 max-w-3xl mx-auto">
       {messages.map((message, index) => (
         <div
-          key={`${message.content}-${index}`}
+          key={`${message.id}-${index}`}
           className={cn(
-            'flex gap-4 text-base',
-            message.role === 'user' ? 'justify-end' : ''
+            'flex gap-3 items-start w-full',
+            message.role === 'user' ? 'flex-row-reverse' : ''
           )}
         >
-          {message.role === 'assistant' && (
-            <div className="flex-shrink-0">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback>G</AvatarFallback>
-              </Avatar>
-            </div>
-          )}
+          <div className={cn(
+            'flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full',
+            message.role === 'user' 
+              ? 'bg-primary text-primary-foreground' 
+              : 'bg-muted'
+          )}>
+            {message.role === 'user' ? (
+              <User className="h-4 w-4" />
+            ) : (
+              <Bot className="h-4 w-4" />
+            )}
+          </div>
+          
           <div
             className={cn(
-              'flex-1 max-w-xl',
-              message.role === 'user' && 'text-right'
+              'flex-1 max-w-[calc(100%-56px)]',
+              message.role === 'user' && 'flex justify-end'
             )}
           >
-            <p className="font-medium mb-2">
-              {message.role === 'user' ? 'You' : 'Grok'}
-            </p>
             <div
               className={cn(
-                'space-y-4 text-foreground/90 rounded-lg',
+                'p-4 rounded-2xl text-sm leading-relaxed',
                 message.role === 'user'
-                  ? 'bg-primary text-primary-foreground inline-block p-4'
-                  : 'py-4 pr-4'
+                  ? 'bg-primary text-primary-foreground rounded-tr-md'
+                  : 'bg-muted text-foreground rounded-tl-md'
               )}
             >
               {message.content.split('\n').map((line, i) => (
-                <p key={i}>{line}</p>
+                <p key={i} className={i > 0 ? 'mt-2' : ''}>{line}</p>
               ))}
             </div>
+            
             {message.role === 'assistant' && (
-              <div className="flex items-center gap-2 mt-3 text-muted-foreground">
-                <Button variant="ghost" size="icon" className="h-8 w-8 -ml-2">
-                  <RefreshCw className="h-4 w-4" />
+              <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
+                <Button variant="ghost" size="icon" className="h-7 w-7 p-0 hover:bg-accent">
+                  <RefreshCw className="h-3 w-3" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Copy className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="h-7 w-7 p-0 hover:bg-accent">
+                  <Copy className="h-3 w-3" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <ThumbsUp className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="h-7 w-7 p-0 hover:bg-accent">
+                  <ThumbsUp className="h-3 w-3" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <ThumbsDown className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="h-7 w-7 p-0 hover:bg-accent">
+                  <ThumbsDown className="h-3 w-3" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Share2 className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="h-7 w-7 p-0 hover:bg-accent">
+                  <Share2 className="h-3 w-3" />
                 </Button>
               </div>
             )}
           </div>
-          {message.role === 'user' && (
-            <div className="flex-shrink-0">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback>M</AvatarFallback>
-              </Avatar>
-            </div>
-          )}
         </div>
       ))}
+      
       {isSending && (
-        <div className="flex gap-4 text-base">
-          <Avatar className="h-8 w-8 flex-shrink-0">
-            <AvatarFallback>G</AvatarFallback>
-          </Avatar>
-          <div className="flex-1 max-w-xl">
-            <p className="font-medium mb-2">Grok</p>
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6" />
+        <div className="flex gap-3 items-start w-full">
+          <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-muted">
+            <Bot className="h-4 w-4" />
+          </div>
+          <div className="flex-1 max-w-[calc(100%-56px)]">
+            <div className="p-4 rounded-2xl rounded-tl-md bg-muted">
+              <div className="space-y-2">
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-4/5" />
+                <Skeleton className="h-3 w-3/5" />
+              </div>
             </div>
           </div>
         </div>
