@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 import { dummyVendors } from "@/lib/data";
 import type { Vendor } from "@/lib/data";
 import VendorCard from "@/components/vendors/VendorCard";
-import VendorDetailModal from "@/components/vendors/VendorDetailModal";
 import VendorFilters from "@/components/vendors/VendorFilters";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,7 +42,7 @@ export default function VendorsPage() {
     sortBy: "recommended",
   });
 
-  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredVendors = useMemo(() => {
@@ -180,7 +179,6 @@ export default function VendorsPage() {
                   <VendorCard
                     key={vendor.id}
                     vendor={vendor}
-                    onViewDetails={() => setSelectedVendor(vendor)}
                     selectedDate={filters.weddingDate}
                   />
                 ))}
@@ -231,13 +229,6 @@ export default function VendorsPage() {
             )}
           </main>
 
-          {selectedVendor && (
-            <VendorDetailModal
-              vendor={selectedVendor}
-              isOpen={!!selectedVendor}
-              onClose={() => setSelectedVendor(null)}
-            />
-          )}
         </div>
       </SidebarInset>
     </SidebarProvider>
