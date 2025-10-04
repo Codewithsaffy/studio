@@ -15,6 +15,10 @@ import {
   PaginationPrevious,
   PaginationLink,
 } from "@/components/ui/pagination";
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
+import { LeftSidebar } from '@/components/grok/LeftSidebar';
+import { Header } from '@/components/grok/Header';
+import { type CSSProperties } from 'react';
 
 export type Filters = {
   categories: string[];
@@ -137,92 +141,105 @@ export default function VendorsPage() {
   };
 
   return (
-    <div className="bg-background min-h-screen overflow-x-hidden">
-      <VendorFilters
-        filters={filters}
-        setFilters={setFilters}
-        resultsCount={filteredVendors.length}
-      />
+    <SidebarProvider
+      style={
+        {
+          '--sidebar-width': '260px',
+          '--sidebar-width-icon': '80px',
+        } as CSSProperties
+      }
+    >
+      <LeftSidebar />
+      <SidebarInset className="overflow-hidden">
+        <Header />
+        <div className="bg-background min-h-screen overflow-x-hidden">
+          <VendorFilters
+            filters={filters}
+            setFilters={setFilters}
+            resultsCount={filteredVendors.length}
+          />
 
-      <main className="p-4 sm:p-6 lg:p-8">
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
-          <h2 className="text-lg font-medium text-foreground">
-            Showing {filteredVendors.length} of {dummyVendors.length} vendors
-            {filters.location !== "all" && ` in ${filters.location}`}
-          </h2>
-          <Button
-            variant="link"
-            onClick={clearFilters}
-            className="text-primary"
-          >
-            Clear All Filters
-          </Button>
+          <main className="p-4 sm:p-6 lg:p-8">
+            <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
+              <h2 className="text-lg font-medium text-foreground">
+                Showing {filteredVendors.length} of {dummyVendors.length} vendors
+                {filters.location !== "all" && ` in ${filters.location}`}
+              </h2>
+              <Button
+                variant="link"
+                onClick={clearFilters}
+                className="text-primary"
+              >
+                Clear All Filters
+              </Button>
+            </div>
+
+            {paginatedVendors.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-hidden">
+                {paginatedVendors.map((vendor) => (
+                  <VendorCard
+                    key={vendor.id}
+                    vendor={vendor}
+                    onViewDetails={() => setSelectedVendor(vendor)}
+                    selectedDate={filters.weddingDate}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <h3 className="text-2xl font-bold mb-2">🔍 No vendors found</h3>
+                <p className="text-muted-foreground mb-4">
+                  Try adjusting your filters to find the perfect match.
+                </p>
+                <Button onClick={clearFilters}>Clear All Filters</Button>
+              </div>
+            )}
+
+            {totalPages > 1 && (
+              <Pagination className="mt-12 overflow-x-auto">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      className={
+                        currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                      }
+                    />
+                  </PaginationItem>
+                  {[...Array(totalPages)].map((_, i) => (
+                    <PaginationItem key={i}>
+                      <PaginationLink
+                        onClick={() => handlePageChange(i + 1)}
+                        isActive={currentPage === i + 1}
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      className={
+                        currentPage === totalPages
+                          ? "pointer-events-none opacity-50"
+                          : ""
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
+          </main>
+
+          {selectedVendor && (
+            <VendorDetailModal
+              vendor={selectedVendor}
+              isOpen={!!selectedVendor}
+              onClose={() => setSelectedVendor(null)}
+            />
+          )}
         </div>
-
-        {paginatedVendors.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-hidden">
-            {paginatedVendors.map((vendor) => (
-              <VendorCard
-                key={vendor.id}
-                vendor={vendor}
-                onViewDetails={() => setSelectedVendor(vendor)}
-                selectedDate={filters.weddingDate}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20">
-            <h3 className="text-2xl font-bold mb-2">🔍 No vendors found</h3>
-            <p className="text-muted-foreground mb-4">
-              Try adjusting your filters to find the perfect match.
-            </p>
-            <Button onClick={clearFilters}>Clear All Filters</Button>
-          </div>
-        )}
-
-        {totalPages > 1 && (
-          <Pagination className="mt-12 overflow-x-auto">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  className={
-                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                  }
-                />
-              </PaginationItem>
-              {[...Array(totalPages)].map((_, i) => (
-                <PaginationItem key={i}>
-                  <PaginationLink
-                    onClick={() => handlePageChange(i + 1)}
-                    isActive={currentPage === i + 1}
-                  >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  className={
-                    currentPage === totalPages
-                      ? "pointer-events-none opacity-50"
-                      : ""
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
-      </main>
-
-      {selectedVendor && (
-        <VendorDetailModal
-          vendor={selectedVendor}
-          isOpen={!!selectedVendor}
-          onClose={() => setSelectedVendor(null)}
-        />
-      )}
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
