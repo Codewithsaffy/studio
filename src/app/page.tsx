@@ -12,18 +12,18 @@ export default function Home() {
     <SidebarProvider
       style={
         {
-          '--sidebar-width': '260px',
+          '--sidebar-width': '280px',
           '--sidebar-width-icon': '80px',
         } as CSSProperties
       }
     >
-      <LeftSidebar />
-      <SidebarInset className="overflow-hidden">
-        <Header />
-        <ChatProvider>
+      <ChatProvider>
+        <LeftSidebar />
+        <SidebarInset>
+          <Header />
           <ChatView />
-        </ChatProvider>
-      </SidebarInset>
+        </SidebarInset>
+      </ChatProvider>
     </SidebarProvider>
   );
 }

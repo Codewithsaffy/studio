@@ -1,10 +1,15 @@
+"use client";
 
-'use client';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from "react";
+import type { Conversation, Message } from "@/types";
 
-import React, { createContext, useState, useEffect, ReactNode, useCallback } from 'react';
-import type { Conversation, Message } from '@/types';
-
-const HISTORY_KEY = 'grok_chat_history';
+const HISTORY_KEY = "grok_chat_history";
 
 interface ChatContextType {
   conversations: Conversation[];
@@ -26,7 +31,9 @@ export const ChatContext = createContext<ChatContextType>({
 
 export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const [activeConversationId, setActiveConversationId] = useState<
+    string | null
+  >(null);
   const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
@@ -34,7 +41,10 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       const storedHistory = localStorage.getItem(HISTORY_KEY);
       if (storedHistory) {
         const parsedHistory: Conversation[] = JSON.parse(storedHistory);
-        parsedHistory.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        parsedHistory.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
         setConversations(parsedHistory);
       }
     } catch (error) {
@@ -50,45 +60,52 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const addMessage = useCallback(async (messagesToAdd: Message | Message[]) => {
-    const messages = Array.isArray(messagesToAdd) ? messagesToAdd : [messagesToAdd];
-    if (messages.length === 0) return;
+  const addMessage = useCallback(
+    async (messagesToAdd: Message | Message[]) => {
+      const messages = Array.isArray(messagesToAdd)
+        ? messagesToAdd
+        : [messagesToAdd];
+      if (messages.length === 0) return;
 
-    if (activeConversationId) {
-      // Update existing conversation
-      const updatedConversations = conversations.map(convo => {
-        if (convo.id === activeConversationId) {
-          return {
-            ...convo,
-            messages: [...convo.messages, ...messages],
-          };
+      if (activeConversationId) {
+        // Update existing conversation
+        let updatedConversations = conversations.map((convo) => {
+          if (convo.id === activeConversationId) {
+            return {
+              ...convo,
+              messages: [...convo.messages, ...messages],
+            };
+          }
+          return convo;
+        });
+        
+        // Find the updated conversation and move it to the top
+        const updatedConvoIndex = updatedConversations.findIndex(
+          (c) => c.id === activeConversationId
+        );
+        if (updatedConvoIndex > 0) { // Only move if it's not already at the top
+          const [updatedConvo] = updatedConversations.splice(updatedConvoIndex, 1);
+          updatedConversations = [updatedConvo, ...updatedConversations];
         }
-        return convo;
-      });
-      // Move updated conversation to the top
-      const currentConvoIndex = updatedConversations.findIndex(c => c.id === activeConversationId);
-      if (currentConvoIndex > -1) {
-        const [currentConvo] = updatedConversations.splice(currentConvoIndex, 1);
-        updatedConversations.unshift(currentConvo);
-      }
-      setConversations(updatedConversations);
-      saveToLocalStorage(updatedConversations);
-    } else {
-      // Create a new conversation
-      const newConversation: Conversation = {
-        id: Date.now().toString(),
-        title: messages[0].content.split(' ').slice(0, 5).join(' '),
-        createdAt: new Date().toISOString(),
-        messages: messages,
-      };
-      
-      const updatedConversations = [newConversation, ...conversations];
-      setConversations(updatedConversations);
-      setActiveConversationId(newConversation.id); // This is the key change
-      saveToLocalStorage(updatedConversations);
-    }
-  }, [activeConversationId, conversations]);
+        setConversations(updatedConversations);
+        saveToLocalStorage(updatedConversations);
+      } else {
+        // Create a new conversation
+        const newConversation: Conversation = {
+          id: Date.now().toString(),
+          title: messages[0].content.substring(0, 30) + (messages[0].content.length > 30 ? "..." : ""),
+          createdAt: new Date().toISOString(),
+          messages: messages,
+        };
 
+        const updatedConversations = [newConversation, ...conversations];
+        setConversations(updatedConversations);
+        setActiveConversationId(newConversation.id);
+        saveToLocalStorage(updatedConversations);
+      }
+    },
+    [activeConversationId, conversations]
+  );
 
   const loadConversation = (id: string) => {
     setActiveConversationId(id);
@@ -98,7 +115,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     setActiveConversationId(null);
   };
 
-  const activeConversation = conversations.find(c => c.id === activeConversationId) || null;
+  const activeConversation =
+    conversations.find((c) => c.id === activeConversationId) || null;
 
   return (
     <ChatContext.Provider
