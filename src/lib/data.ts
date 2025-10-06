@@ -1,6 +1,6 @@
 export type Vendor = {
   id: string;
-  category: string; // "hall" | "catering" | "photography" | "decoration" | "car" | "bus"
+  category: string; // "halls" | "catering" | "photography" | "decoration" | "cars" | "buses"
   name: string;
   location: string;
   city: string;
@@ -18,7 +18,7 @@ export const dummyVendors: Vendor[] = [
   // ========== WEDDING HALLS (10) ==========
   {
     id: "hall_001",
-    category: "hall",
+    category: "halls",
     name: "Royal Banquet Karachi",
     location: "Gulshan-e-Iqbal, Karachi",
     city: "Karachi",
@@ -32,7 +32,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "hall_002",
-    category: "hall",
+    category: "halls",
     name: "Grand Palace Lahore",
     location: "DHA Phase 5, Lahore",
     city: "Lahore",
@@ -46,7 +46,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "hall_003",
-    category: "hall",
+    category: "halls",
     name: "Pearl Continental Banquet",
     location: "Clifton, Karachi",
     city: "Karachi",
@@ -65,7 +65,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "hall_004",
-    category: "hall",
+    category: "halls",
     name: "Shezan Marquee",
     location: "Johar Town, Lahore",
     city: "Lahore",
@@ -79,7 +79,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "hall_005",
-    category: "hall",
+    category: "halls",
     name: "Emerald Hall Islamabad",
     location: "F-7 Markaz, Islamabad",
     city: "Islamabad",
@@ -98,7 +98,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "hall_006",
-    category: "hall",
+    category: "halls",
     name: "Crystal Banquet Multan",
     location: "Gulgasht Colony, Multan",
     city: "Multan",
@@ -112,7 +112,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "hall_007",
-    category: "hall",
+    category: "halls",
     name: "Mehran Palace Hyderabad",
     location: "Latifabad, Hyderabad",
     city: "Hyderabad",
@@ -126,7 +126,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "hall_008",
-    category: "hall",
+    category: "halls",
     name: "Luxury Gardens Rawalpindi",
     location: "Saddar, Rawalpindi",
     city: "Rawalpindi",
@@ -140,7 +140,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "hall_009",
-    category: "hall",
+    category: "halls",
     name: "Golden Crown Faisalabad",
     location: "Peoples Colony, Faisalabad",
     city: "Faisalabad",
@@ -154,7 +154,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "hall_010",
-    category: "hall",
+    category: "halls",
     name: "Regal Marquee Peshawar",
     location: "Hayatabad, Peshawar",
     city: "Peshawar",
@@ -489,7 +489,7 @@ export const dummyVendors: Vendor[] = [
   // ========== CARS (10) ==========
   {
     id: "car_001",
-    category: "car",
+    category: "cars",
     name: "Elite Wedding Cars",
     location: "Karachi",
     city: "Karachi",
@@ -508,7 +508,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "car_002",
-    category: "car",
+    category: "cars",
     name: "Royal Rides Lahore",
     location: "Lahore",
     city: "Lahore",
@@ -522,7 +522,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "car_003",
-    category: "car",
+    category: "cars",
     name: "Luxury Car Rentals",
     location: "Karachi",
     city: "Karachi",
@@ -536,7 +536,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "car_004",
-    category: "car",
+    category: "cars",
     name: "Classic Cars Wedding",
     location: "Lahore",
     city: "Lahore",
@@ -550,7 +550,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "car_005",
-    category: "car",
+    category: "cars",
     name: "Premium Wheels Islamabad",
     location: "Islamabad",
     city: "Islamabad",
@@ -564,7 +564,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "car_006",
-    category: "car",
+    category: "cars",
     name: "VIP Car Services Multan",
     location: "Multan",
     city: "Multan",
@@ -578,7 +578,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "car_007",
-    category: "car",
+    category: "cars",
     name: "Dream Cars Hyderabad",
     location: "Hyderabad",
     city: "Hyderabad",
@@ -592,7 +592,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "car_008",
-    category: "car",
+    category: "cars",
     name: "Grand Car Rentals Rawalpindi",
     location: "Rawalpindi",
     city: "Rawalpindi",
@@ -606,7 +606,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "car_009",
-    category: "car",
+    category: "cars",
     name: "Stylish Rides Faisalabad",
     location: "Faisalabad",
     city: "Faisalabad",
@@ -620,7 +620,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "car_010",
-    category: "car",
+    category: "cars",
     name: "Prestige Cars Peshawar",
     location: "Peshawar",
     city: "Peshawar",
@@ -636,7 +636,7 @@ export const dummyVendors: Vendor[] = [
   // ========== BUSES (10) ==========
   {
     id: "bus_001",
-    category: "bus",
+    category: "buses",
     name: "Comfort Coach Services",
     location: "Karachi",
     city: "Karachi",
@@ -650,7 +650,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "bus_002",
-    category: "bus",
+    category: "buses",
     name: "Royal Transport Lahore",
     location: "Lahore",
     city: "Lahore",
@@ -664,7 +664,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "bus_003",
-    category: "bus",
+    category: "buses",
     name: "City Travels Wedding Buses",
     location: "Karachi",
     city: "Karachi",
@@ -678,7 +678,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "bus_004",
-    category: "bus",
+    category: "buses",
     name: "Deluxe Coaches Lahore",
     location: "Lahore",
     city: "Lahore",
@@ -692,7 +692,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "bus_005",
-    category: "bus",
+    category: "buses",
     name: "Metro Bus Rentals Islamabad",
     location: "Islamabad",
     city: "Islamabad",
@@ -706,7 +706,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "bus_006",
-    category: "bus",
+    category: "buses",
     name: "Express Transport Multan",
     location: "Multan",
     city: "Multan",
@@ -720,7 +720,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "bus_007",
-    category: "bus",
+    category: "buses",
     name: "Sindh Travels Hyderabad",
     location: "Hyderabad",
     city: "Hyderabad",
@@ -734,7 +734,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "bus_008",
-    category: "bus",
+    category: "buses",
     name: "Grand Coaches Rawalpindi",
     location: "Rawalpindi",
     city: "Rawalpindi",
@@ -748,7 +748,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "bus_009",
-    category: "bus",
+    category: "buses",
     name: "Punjab Transport Faisalabad",
     location: "Faisalabad",
     city: "Faisalabad",
@@ -762,7 +762,7 @@ export const dummyVendors: Vendor[] = [
   },
   {
     id: "bus_010",
-    category: "bus",
+    category: "buses",
     name: "Frontier Coaches Peshawar",
     location: "Peshawar",
     city: "Peshawar",

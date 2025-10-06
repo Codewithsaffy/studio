@@ -9,7 +9,6 @@ import { PromptInput } from "@/components/grok/PromptInput";
 import { ChatLog } from "@/components/grok/ChatLog";
 import { Button } from "@/components/ui/button";
 import { Share2, Plus, Sparkles } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export function ChatView() {
   const { activeConversation, addMessage, isSending, startNewConversation } =

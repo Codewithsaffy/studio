@@ -1,21 +1,21 @@
+"use client";
 
-'use client';
-
-import { useState, useMemo } from 'react';
-import { dummyVendors } from '@/lib/data';
-import type { Vendor } from '@/lib/data';
-import VendorCard from '@/components/vendors/VendorCard';
-import VendorDetailModal from '@/components/vendors/VendorDetailModal';
-import VendorFilters from '@/components/vendors/VendorFilters';
-import { Button } from '@/components/ui/button';
-import { 
+import { useState, useMemo, useEffect, use } from "react";
+import { dummyVendors } from "@/lib/data";
+import type { Vendor } from "@/lib/data";
+import VendorCard from "@/components/vendors/VendorCard";
+import VendorDetailModal from "@/components/vendors/VendorDetailModal";
+import VendorFilters from "@/components/vendors/VendorFilters";
+import { Button } from "@/components/ui/button";
+import { notFound } from "next/navigation";
+import {
   Pagination,
   PaginationContent,
   PaginationItem,
   PaginationNext,
   PaginationPrevious,
   PaginationLink,
-} from '@/components/ui/pagination';
+} from "@/components/ui/pagination";
 
 export type Filters = {
   categories: string[];
@@ -27,49 +27,95 @@ export type Filters = {
   sortBy: string;
 };
 
-const VENDORS_PER_PAGE = 9;
+type Params = Promise<{ category: string }>;
 
-export default function VendorsPage() {
+const VENDORS_PER_PAGE = 9;
+const VALID_CATEGORIES = ["halls", "catering", "photography", "cars", "buses"];
+
+function getCategoryFromSlug(slug: string): string {
+  switch (slug) {
+    case "halls":
+      return "hall";
+    case "cars":
+      return "car";
+    case "buses":
+      return "bus";
+    case "catering":
+      return "catering";
+    case "photography":
+      return "photography";
+    default:
+      return slug.slice(0, -1);
+  }
+}
+
+export default function CategoryPage(props: { params: Params }) {
+  const params = use(props.params);
+  const category = params.category;
+  console.log(category)
+
+  if (!VALID_CATEGORIES.includes(category)) {
+    notFound();
+  }
+
+  const vendorCategory = getCategoryFromSlug(category);
+
   const [filters, setFilters] = useState<Filters>({
-    categories: [],
-    location: 'all',
+    categories: [vendorCategory],
+    location: "all",
     budgetMin: 0,
     budgetMax: 300000,
     weddingDate: undefined,
     minRating: 0,
-    sortBy: 'recommended',
+    sortBy: "recommended",
   });
 
-  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredVendors = useMemo(() => {
-    let vendors = [...dummyVendors];
+  useEffect(() => {
+    setIsMounted(true);
+    const cat = getCategoryFromSlug(category);
+    setFilters((f) => ({ ...f, categories: [cat] }));
+    setCurrentPage(1);
+  }, [category]);
 
-    // Category filter
-    if (filters.categories.length > 0 && !filters.categories.includes('all')) {
-      vendors = vendors.filter((v) => filters.categories.includes(v.category));
-    }
+  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+
+  const initialVendors = useMemo(() => {
+    const cat = getCategoryFromSlug(category);
+    return dummyVendors.filter((v) => v.category === category);
+  }, [category]);
+
+  const filteredVendors = useMemo(() => {
+    if (!isMounted) return [];
+
+    let vendors = [...initialVendors];
 
     // Location filter
-    if (filters.location && filters.location !== 'all') {
+    if (filters.location && filters.location !== "all") {
       vendors = vendors.filter((v) => v.city === filters.location);
     }
 
     // Budget filter
-    const isPackageCategory = filters.categories.some(cat => ['photography', 'car', 'bus'].includes(cat));
+    const isPackageCategory = filters.categories.some((cat) =>
+      ["photography", "car", "bus"].includes(cat)
+    );
     const budgetMax = isPackageCategory ? 300000 : 5000;
 
     vendors = vendors.filter((v) => {
       const price = v.pricePerHead ?? v.packagePrice ?? 0;
       const min = filters.budgetMin;
-      const max = filters.budgetMax === (isPackageCategory ? 300000 : 5000) ? Infinity : filters.budgetMax;
+      const max =
+        filters.budgetMax === (isPackageCategory ? 300000 : 5000)
+          ? Infinity
+          : filters.budgetMax;
       return price >= min && price <= max;
     });
 
     // Availability filter
     if (filters.weddingDate) {
-      const dateString = filters.weddingDate.toISOString().split('T')[0];
+      const dateString = filters.weddingDate.toISOString().split("T")[0];
       vendors = vendors.filter((v) => !v.bookedDates.includes(dateString));
     }
 
@@ -80,32 +126,30 @@ export default function VendorsPage() {
 
     // Sorting
     switch (filters.sortBy) {
-      case 'price-low':
+      case "price-low":
         vendors.sort(
           (a, b) =>
             (a.pricePerHead ?? a.packagePrice ?? 0) -
             (b.pricePerHead ?? b.packagePrice ?? 0)
         );
         break;
-      case 'price-high':
+      case "price-high":
         vendors.sort(
           (a, b) =>
             (b.pricePerHead ?? b.packagePrice ?? 0) -
             (a.pricePerHead ?? a.packagePrice ?? 0)
         );
         break;
-      case 'rating':
+      case "rating":
         vendors.sort((a, b) => b.rating - a.rating);
         break;
       default:
-        // recommended (default) - can be a mix of rating and other factors
         vendors.sort((a, b) => b.rating - a.rating);
         break;
-
     }
     return vendors;
-  }, [filters]);
-  
+  }, [filters, initialVendors, isMounted]);
+
   const totalPages = Math.ceil(filteredVendors.length / VENDORS_PER_PAGE);
 
   const paginatedVendors = useMemo(() => {
@@ -115,40 +159,56 @@ export default function VendorsPage() {
   }, [filteredVendors, currentPage]);
 
   const clearFilters = () => {
+    const cat = getCategoryFromSlug(category);
     setFilters({
-      categories: [],
-      location: 'all',
+      categories: [cat],
+      location: "all",
       budgetMin: 0,
       budgetMax: 300000,
       weddingDate: undefined,
       minRating: 0,
-      sortBy: 'recommended',
+      sortBy: "recommended",
     });
     setCurrentPage(1);
-  }
-  
+  };
+
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
       window.scrollTo(0, 0);
     }
-  }
+  };
+
+  const pageTitle = `${
+    category.charAt(0).toUpperCase() + category.slice(1)
+  } in Pakistan - ShaadiSaathi`;
 
   return (
     <div className="bg-background min-h-screen">
-      <VendorFilters filters={filters} setFilters={setFilters} resultsCount={filteredVendors.length} />
-      
+      <title>{pageTitle}</title>
+      <VendorFilters
+        filters={filters}
+        setFilters={setFilters}
+        resultsCount={filteredVendors.length}
+        isCategoryPage
+      />
+
       <main className="p-4 sm:p-6 lg:p-8">
         <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
           <h2 className="text-lg font-medium text-foreground">
-            Showing {filteredVendors.length} of {dummyVendors.length} vendors
-            {filters.location !== 'all' && ` in ${filters.location}`}
+            Showing {filteredVendors.length} of {initialVendors.length}{" "}
+            {category}
+            {filters.location !== "all" && ` in ${filters.location}`}
           </h2>
-          <Button variant="link" onClick={clearFilters} className="text-primary">
+          <Button
+            variant="link"
+            onClick={clearFilters}
+            className="text-primary"
+          >
             Clear All Filters
           </Button>
         </div>
-        
+
         {paginatedVendors.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {paginatedVendors.map((vendor) => (
@@ -163,7 +223,9 @@ export default function VendorsPage() {
         ) : (
           <div className="text-center py-20">
             <h3 className="text-2xl font-bold mb-2">🔍 No vendors found</h3>
-            <p className="text-muted-foreground mb-4">Try adjusting your filters to find the perfect match.</p>
+            <p className="text-muted-foreground mb-4">
+              Try adjusting your filters to find the perfect match.
+            </p>
             <Button onClick={clearFilters}>Clear All Filters</Button>
           </div>
         )}
@@ -172,14 +234,16 @@ export default function VendorsPage() {
           <Pagination className="mt-12">
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious 
+                <PaginationPrevious
                   onClick={() => handlePageChange(currentPage - 1)}
-                  className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                  className={
+                    currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                  }
                 />
               </PaginationItem>
               {[...Array(totalPages)].map((_, i) => (
                 <PaginationItem key={i}>
-                  <PaginationLink 
+                  <PaginationLink
                     onClick={() => handlePageChange(i + 1)}
                     isActive={currentPage === i + 1}
                   >
@@ -188,9 +252,13 @@ export default function VendorsPage() {
                 </PaginationItem>
               ))}
               <PaginationItem>
-                <PaginationNext 
+                <PaginationNext
                   onClick={() => handlePageChange(currentPage + 1)}
-                  className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+                  className={
+                    currentPage === totalPages
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }
                 />
               </PaginationItem>
             </PaginationContent>
