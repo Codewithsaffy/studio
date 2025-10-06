@@ -109,7 +109,7 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
                 </div>
             </div>
           
-          <div className="p-6 space-y-6">
+          <div className="p-4 md:p-6 space-y-6">
             <div className="flex justify-between items-start">
               <div>
                 <h2 className="text-3xl font-bold font-headline">{vendor.name}</h2>
@@ -299,5 +299,3 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
     </Dialog>
   );
 }
-
-    
