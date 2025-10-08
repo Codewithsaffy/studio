@@ -5,7 +5,6 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { NextAuthProvider } from '@/components/NextAuthProvider';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { LeftSidebar } from '@/components/grok/LeftSidebar';
-import { Header } from '@/components/grok/Header';
 import { type CSSProperties } from 'react';
 
 export const metadata: Metadata = {
