@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
 } from '@/components/ui/dialog';
 import {
   Carousel,
@@ -91,7 +92,9 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogTitle className='hidden'>{vendor.name}</DialogTitle>
       <DialogContent className="max-w-5xl w-full p-0 max-h-[95vh] flex flex-col bg-card">
+     
         <div className="flex-1 overflow-y-auto">
             <div className="grid grid-cols-2 gap-1 h-80">
                 <div className="col-span-2 sm:col-span-1 h-80">
