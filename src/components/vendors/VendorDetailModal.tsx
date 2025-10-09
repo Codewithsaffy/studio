@@ -1,7 +1,10 @@
 
+
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import {
   Dialog,
   DialogContent,
@@ -30,6 +33,7 @@ import { addDays, format, isBefore, startOfToday } from 'date-fns';
 import { Card, CardContent } from '../ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { Separator } from '../ui/separator';
+import { useToast } from '@/hooks/use-toast';
 
 interface VendorDetailModalProps {
   vendor: Vendor;
@@ -63,8 +67,13 @@ const dummyReviews = [
 
 
 export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDetailModalProps) {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const { toast } = useToast();
+  
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [guests, setGuests] = useState(vendor.capacity ? parseInt(vendor.capacity.split('-')[0]) || 200 : 200);
+  const [isBooking, setIsBooking] = useState(false);
 
   const isDateBooked = (date: Date) => {
     return vendor.bookedDates.includes(format(date, 'yyyy-MM-dd'));
@@ -80,6 +89,75 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
     }
   };
 
+  const handleBooking = async () => {
+    if (!session) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to book a service.",
+        variant: "destructive",
+      });
+      router.push('/login');
+      return;
+    }
+
+    if (!selectedDate) {
+      toast({
+        title: "Select a Date",
+        description: "Please select a date from the availability calendar.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (isDateBooked(selectedDate)) {
+       toast({
+        title: "Date Not Available",
+        description: "This date is already booked. Please select another date.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsBooking(true);
+    
+    const totalPrice = vendor.pricePerHead ? guests * vendor.pricePerHead : vendor.packagePrice || 0;
+
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vendorId: vendor.id,
+          bookingDate: selectedDate.toISOString(),
+          guests: vendor.pricePerHead ? guests : undefined,
+          totalPrice,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Booking Successful!",
+          description: result.message,
+        });
+        onClose();
+        router.push('/bookings');
+      } else {
+        throw new Error(result.message || 'Failed to book.');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Booking Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsBooking(false);
+    }
+  };
+
+
   const portfolioImages = [
     "https://picsum.photos/seed/p1/800/600",
     "https://picsum.photos/seed/p2/800/600",
@@ -90,6 +168,8 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
   ];
   
   const allImages = [vendor.image, ...portfolioImages.slice(0,4)];
+
+  const totalPrice = vendor.pricePerHead ? guests * vendor.pricePerHead : vendor.packagePrice;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -299,3 +379,4 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
     </Dialog>
   );
 }
+
