@@ -13,7 +13,7 @@ import {
 import { Loader } from "@/components/ai-elements/loader";
 import { Message, MessageContent } from "@/components/ai-elements/message";
 import { Response } from "@/components/ai-elements/response";
-import { useChat } from "@ai-sdk/react";
+import { useChat } from "ai/react";
 import { PromptInput } from "@/components/grok/PromptInput";
 import { Copy, Plus, RefreshCw, Share2, ThumbsDown, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,10 +27,10 @@ import {
 import { CodeBlock } from "@/components/ai-elements/code-block";
 
 const GeminiReasoningChat = () => {
-  const { messages, sendMessage, status } = useChat();
+  const { messages, append, status } = useChat();
   const handleSubmit = (prompt: string) => {
     if (typeof prompt === "string" && prompt.trim() !== "") {
-      sendMessage({ text: prompt });
+      append({ role: 'user', content: prompt });
     }
   };
   console.log(status)
@@ -61,7 +61,14 @@ const GeminiReasoningChat = () => {
                 key={message.id}
               >
                 <MessageContent className="bg-transparent">
-                  {message.parts.map((part, i) => {
+                  {typeof message.content === 'string' ? (
+                      <Response
+                        className="bg-transparent"
+                      >
+                        {message.content}
+                      </Response>
+                  ) : (
+                    message.content.map((part, i) => {
                     switch (part.type) {
                       case "text":
                         return (
@@ -72,80 +79,43 @@ const GeminiReasoningChat = () => {
                             {part.text}
                           </Response>
                         );
-                      case "reasoning":
-                        const plainText = part.text
-                          .replace(/^#{1,6}\s+/gm, "")
-                          .replace(/\*\*(.+?)\*\*/g, "$1")
-                          .replace(/\*(.+?)\*/g, "$1")
-                          .replace(/`(.+?)`/g, "$1")
-                          .replace(/~~(.+?)~~/g, "$1")
-                          .replace(/\[(.+?)\]\(.+?\)/g, "$1");
-
-                        return (
-                          <Reasoning
-                            key={`${message.id}-${i}`}
-                            className="whitespace-pre-wrap text-sm text-gray-700 dark:text-gray-300"
-                            isStreaming={status === "streaming"}
-                          >
-                            <ReasoningTrigger />
-                            <ReasoningContent>{plainText}</ReasoningContent>
-                          </Reasoning>
-                        );
-                      case "tool-getLocation":
+                      case "tool-call":
+                        if(part.toolName === 'getWeather'){
                         return (
                           <Tool key={part.toolCallId} defaultOpen={false}  className="max-w-[325px]">
                             <ToolHeader
-                              type="tool-get_location"
-                              state={part.state}
+                              type="tool-call"
+                              state={'input-available'}
 
                             />
                             <ToolContent>
-                              <ToolInput input={part.input} />
-                              {part.state === "output-available" && (
-                                <ToolOutput
-                                  errorText={part.errorText}
-                                  output={
-                                    <CodeBlock
-                                      code={JSON.stringify(part.output)}
-                                      language="json"
-                                    />
-                                  }
-                                />
-                              )}
+                              <ToolInput input={part.args} />
                             </ToolContent>
                           </Tool>
                         );
-                      case "tool-getWeather":
-                        return (
+                        } else if(part.toolName === 'getLocation'){
+                           return (
                           <Tool key={part.toolCallId} defaultOpen={false}  className="max-w-[325px]">
                             <ToolHeader
-                              type="tool-fetch_weather_data"
-                              state={part.state}
+                              type="tool-call"
+                              state={'input-available'}
 
                             />
                             <ToolContent>
-                              <ToolInput input={part.input} />
-                              {part.state === "output-available" && (
-                                <ToolOutput
-                                  errorText={part.errorText}
-                                  output={
-                                    <CodeBlock
-                                      code={JSON.stringify(part.output)}
-                                      language="json"
-                                    />
-                                  }
-                                />
-                              )}
+                              <ToolInput input={part.args} />
                             </ToolContent>
                           </Tool>
                         );
+                        }
                       default:
                         return null;
                     }
-                  })}
+                  })
+                  )}
+
                 </MessageContent>
               </Message>
-              {(message.role === 'assistant' && !(message.id === messages[messages.length - 1].id && status === "streaming"))  && (
+              {(message.role === 'assistant' && status !== "in_progress")  && (
               <div className="flex items-center text-muted-foreground ml-2">
                 <Button variant="ghost" size="icon" className="h-8 w-8">
                   <RefreshCw className="h-4 w-4" />
@@ -168,7 +138,7 @@ const GeminiReasoningChat = () => {
 
 
             ))}
-            {status === "submitted" && <Loader />}
+            {status === "in_progress" && <Loader />}
           </ConversationContent>
           <ConversationScrollButton />
         </Conversation>
