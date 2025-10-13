@@ -43,7 +43,6 @@ export default function RootLayout({
             >
               <LeftSidebar />
               <SidebarInset>
-                <Header />
                 {children}
               </SidebarInset>
             </SidebarProvider>

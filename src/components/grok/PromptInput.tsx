@@ -9,20 +9,12 @@ import {
 } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { ArrowUp, Mic, LoaderCircle } from "lucide-react";
+import { ArrowUp, Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface PromptInputProps {
-  onSubmit: (prompt: string) => void;
-  isSending: boolean;
-  isChatActive: boolean;
-}
 
-export function PromptInput({
-  onSubmit,
-  isSending,
-  isChatActive,
-}: PromptInputProps) {
+
+export function PromptInput({ onSubmit }: { onSubmit: (prompt: string) => void }) {
   const [prompt, setPrompt] = useState("");
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
@@ -62,7 +54,7 @@ export function PromptInput({
 
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (prompt.trim() && !isSending) {
+    if (prompt.trim()) {
       onSubmit(prompt);
       setPrompt("");
     }
@@ -87,18 +79,14 @@ export function PromptInput({
         <Textarea
           rows={1}
           value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
+          onChange={(e)=> setPrompt(e.currentTarget.value)}
           onKeyDown={handleKeyDown}
           placeholder={
-            isChatActive
-              ? "How can Grok help?"
-              : "Mujhe 400 guests ke liye venue chahiye..."
+               "Mujhe 400 guests ke liye venue chahiye..."
           }
           className={cn(
             "min-h-[3.5rem] placeholder:text-[12px] w-full rounded-full pl-5 pr-28 focus-visible:ring-1 focus-visible:ring-ring resize-none overflow-hidden py-4",
-            isChatActive
-              ? "bg-card border-border"
-              : "bg-background/80 dark:bg-transparent border-primary shadow-[0_0_20px_rgba(212,175,55,0.2)]"
+               "bg-card border-border"
           )}
           autoFocus
         />
@@ -108,7 +96,7 @@ export function PromptInput({
             variant="ghost"
             size="icon"
             onClick={toggleListening}
-            disabled={isSending}
+            // disabled={isSending}
           >
             <Mic
               className={`h-5 w-5 transition-colors ${
@@ -116,18 +104,19 @@ export function PromptInput({
               }`}
             />
           </Button>
-          {(prompt.trim() || isSending) && (
+          {(prompt.trim()) && (
             <Button
               type="submit"
               size="icon"
-              disabled={isSending}
+              onSubmit={handleFormSubmit}
+              // disabled={isSending}
               className="rounded-full"
             >
-              {isSending ? (
-                <LoaderCircle className="h-5 w-5 animate-spin" />
-              ) : (
+              {/* {isSending ? ( */}
+                {/* <LoaderCircle className="h-5 w-5 animate-spin" /> */}
+              {/* ) : ( */}
                 <ArrowUp className="h-5 w-5" />
-              )}
+              {/* )} */}
             </Button>
           )}
         </div>

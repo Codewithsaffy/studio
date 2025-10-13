@@ -85,9 +85,9 @@
   .welcome-screen-bg {
     @apply bg-background;
   }
-  
+
   .dark .welcome-screen-bg {
-    background: linear-gradient(180deg, #1A0D14 0%, #0D0A10 100%);
+    background: linear-gradient(180deg, #1a0d14 0%, #0d0a10 100%);
   }
 
   .heading-gradient {
@@ -95,14 +95,15 @@
   }
 
   .dark .heading-gradient {
-    background: linear-gradient(180deg, #FFFFFF 0%, #F4C430 100%);
+    background: linear-gradient(180deg, #ffffff 0%, #f4c430 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
   .quick-action-hover {
-    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out;
   }
 
   .quick-action-hover:hover {
@@ -115,3 +116,68 @@
     transform: translateY(-2px);
   }
 }
+
+:root {
+  --sb-track: rgba(255,255,255,0.02);      /* faint track on light bg */
+  --sb-thumb: rgba(0,0,0,0.28);            /* default thumb (light mode) */
+  --sb-thumb-hover: rgba(0,0,0,0.44);
+}
+
+/* Dark overrides (if you use class-based dark mode set .dark on <html>) */
+.dark {
+  --sb-track: rgba(255,255,255,0.02);
+  --sb-thumb: rgba(255,255,255,0.12);
+  --sb-thumb-hover: rgba(255,255,255,0.22);
+}
+
+/* The helper class to apply to any overflow container */
+.custom-scrollbar-overlay {
+  /* Firefox: make scrollbar thin and set thumb/track colors */
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) transparent; /* thumb / track */
+
+  /* Keep default Windows scroll behavior hidden on legacy IE */
+  -ms-overflow-style: auto;
+}
+
+/* WebKit browsers (Chrome, Edge, Safari) */
+.custom-scrollbar-overlay::-webkit-scrollbar {
+  width: 9px;              /* make it slim */
+  height: 9px;
+}
+
+.custom-scrollbar-overlay::-webkit-scrollbar-track {
+  background: transparent; /* hide heavy track — looks overlay-like */
+  margin: 8px 0;           /* small top/bottom gap for nicer look */
+  border-radius: 999px;
+}
+
+.custom-scrollbar-overlay::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb);
+  border-radius: 999px;
+  height: 26px;
+  border: 3px solid transparent;     /* creates a subtle gap from content */
+  background-clip: padding-box;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+  transition: background-color .18s ease, transform .12s ease, opacity .18s;
+  opacity: 0.55;                      /* low visibility until hover */
+}
+
+/* Hover & active: make thumb more visible and slightly wider */
+.custom-scrollbar-overlay:hover::-webkit-scrollbar-thumb,
+.custom-scrollbar-overlay::-webkit-scrollbar-thumb:active {
+  background: var(--sb-thumb-hover);
+  opacity: 1;
+  transform: scaleX(1.02);
+}
+
+
+/* Firefox fallback: increase visibility on hover by changing track color */
+.custom-scrollbar-overlay:hover {
+  scrollbar-color: var(--sb-thumb-hover) transparent;
+}
+
+/* Optional: add a small right padding so content never sits under thumb */
+/* .custom-scrollbar-overlay.with-scroll-padding {
+  padding-right: 8px;
+} */
