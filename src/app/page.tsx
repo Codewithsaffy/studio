@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { ChatView } from '@/components/grok/ChatView';
 import { ChatProvider } from '@/context/ChatContext';
@@ -10,8 +10,8 @@ export default function Home() {
     <SidebarProvider
       style={
         {
-          '--sidebar-width': '280px',
-          '--sidebar-width-icon': '80px',
+          "--sidebar-width": "280px",
+          "--sidebar-width-icon": "80px",
         } as CSSProperties
       }
     >
