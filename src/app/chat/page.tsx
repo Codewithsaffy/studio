@@ -92,6 +92,29 @@ const GeminiReasoningChat = () => {
                           </Reasoning>
                         );
                       case "tool-getLocation":
+                        return (
+                          <Tool key={part.toolCallId} defaultOpen={false}  className="max-w-[325px]">
+                            <ToolHeader
+                              type="tool-get_location"
+                              state={part.state}
+
+                            />
+                            <ToolContent>
+                              <ToolInput input={part.input} />
+                              {part.state === "output-available" && (
+                                <ToolOutput
+                                  errorText={part.errorText}
+                                  output={
+                                    <CodeBlock
+                                      code={JSON.stringify(part.output)}
+                                      language="json"
+                                    />
+                                  }
+                                />
+                              )}
+                            </ToolContent>
+                          </Tool>
+                        );
                       case "tool-getWeather":
                         return (
                           <Tool key={part.toolCallId} defaultOpen={false}  className="max-w-[325px]">
