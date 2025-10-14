@@ -26,7 +26,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import {
-  Building2,
+  Store,
   Building,
   Bus,
   Camera,
@@ -179,7 +179,7 @@ export function LeftSidebar() {
                     isActive={pathname.startsWith("/vendors")}
                   >
                     <Link href="/vendors" className="flex items-center flex-1">
-                      <Building2 className="mr-3" />
+                      <Store className="mr-3" />
                       <span className="group-data-[collapsible=icon]:hidden">
                         Vendors
                       </span>
