@@ -117,7 +117,9 @@ export function LeftSidebar() {
           )}
         >
           {!isCollapsed && (
-            <h1 className="font-bold text-lg heading-gradient">MehfilAI</h1>
+             <Link href="/" className="flex items-center gap-2">
+              <h1 className="font-bold text-lg heading-gradient">MehfilAI</h1>
+            </Link>
           )}
           <SidebarTrigger variant="ghost" size="icon">
             <PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/>
@@ -174,18 +176,21 @@ export function LeftSidebar() {
             <SidebarMenuItem>
               <Collapsible open={isVendorsOpen} onOpenChange={setIsVendorsOpen}>
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton
-                    className="w-full"
-                    isActive={pathname.startsWith("/vendors")}
-                  >
-                    <Link href="/vendors" className="flex items-center flex-1">
-                      <Store className="mr-3" />
-                      <span className="group-data-[collapsible=icon]:hidden">
-                        Vendors
-                      </span>
-                    </Link>
-                    <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
-                  </SidebarMenuButton>
+                   <Link href="/vendors" className="w-full">
+                    <SidebarMenuButton
+                      className="w-full justify-between"
+                      isActive={pathname.startsWith("/vendors")}
+                      tooltip="Vendors"
+                    >
+                        <div className="flex items-center gap-3">
+                         <Store />
+                          <span className="group-data-[collapsible=icon]:hidden">
+                            Vendors
+                          </span>
+                        </div>
+                      <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
+                    </SidebarMenuButton>
+                  </Link>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarGroup className="p-0 mt-1 group-data-[collapsible=icon]:hidden">
@@ -215,12 +220,14 @@ export function LeftSidebar() {
           <ScrollArea className="h-full">
             <SidebarMenuItem>
               <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuButton className="w-full">
-                    <History />
-                    <span className="group-data-[collapsible=icon]:hidden flex-1 text-left">
-                      History
-                    </span>
+                <CollapsibleTrigger className="w-full">
+                   <SidebarMenuButton className="w-full justify-between" tooltip="History">
+                     <div className="flex items-center gap-3">
+                        <History />
+                        <span className="group-data-[collapsible=icon]:hidden flex-1 text-left">
+                          History
+                        </span>
+                      </div>
                     <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isHistoryOpen && "rotate-180")} />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
