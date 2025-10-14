@@ -24,10 +24,12 @@ export function MainLayout({ children }: { children: ReactNode }) {
         } as CSSProperties
       }
     >
-      <ClientOnly>
-        <LeftSidebar />
-      </ClientOnly>
-      <SidebarInset>{children}</SidebarInset>
+      <>
+        <ClientOnly>
+          <LeftSidebar />
+        </ClientOnly>
+        <SidebarInset>{children}</SidebarInset>
+      </>
     </SidebarProvider>
   );
 }
