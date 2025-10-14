@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { BookOpenCheck, CalendarX, ServerCrash } from 'lucide-react';
+import { BookOpenCheck, ServerCrash } from 'lucide-react';
 import type { IBooking } from '@/lib/database/models/Booking';
 import { format } from 'date-fns';
 import Link from 'next/link';
@@ -117,7 +117,7 @@ export default function BookingsPage() {
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {bookings.map(booking => (
-                    <BookingCard key={booking._id} booking={booking} />
+                    <BookingCard key={booking._id as string} booking={booking} />
                 ))}
             </div>
         );

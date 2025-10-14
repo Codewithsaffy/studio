@@ -190,7 +190,7 @@ export function LeftSidebar() {
                         </span>
                       </Link>
                     </div>
-                    <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
+                    <ChevronDown  className={cn("h-2 w-2 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
@@ -224,12 +224,12 @@ export function LeftSidebar() {
                 <CollapsibleTrigger asChild>
                    <SidebarMenuButton className="w-full justify-between" tooltip="History">
                      <div className="flex items-center gap-3">
-                        <History />
+                        <History size={16} />
                         <span className="group-data-[collapsible=icon]:hidden flex-1 text-left">
                           History
                         </span>
                       </div>
-                    <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isHistoryOpen && "rotate-180")} />
+                    <ChevronDown  className={cn("h-2 w-2 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isHistoryOpen && "rotate-180")} />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
