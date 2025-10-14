@@ -124,7 +124,9 @@ export function LeftSidebar() {
           >
             MehfilAI
           </h1>
-          <SidebarTrigger asChild><Button variant="ghost" size="icon"><PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/></Button></SidebarTrigger>
+          <SidebarTrigger variant="ghost" size="icon">
+            <PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/>
+          </SidebarTrigger>
         </div>
       </SidebarHeader>
       <SidebarContent className="flex flex-col overflow-y-auto overflow-x-hidden">
