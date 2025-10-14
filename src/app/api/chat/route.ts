@@ -1,49 +1,13 @@
 import { streamText, convertToModelMessages, tool, ToolSet, InferUITools, UIMessage, UIDataTypes, stepCountIs } from 'ai';
 import { google } from '@ai-sdk/google';
-import { z } from 'zod';
+import { tools } from './tools';
 
 export const maxDuration = 60;
 
-const DELAY_MS = 10000; // 10000 ms = 10 seconds
+const DELAY_MS = 2000; // 2000 ms = 2 seconds
 
 const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
-const tools = {
-  getLocation: tool({
-    description: 'Get the location of the user',
-    inputSchema: z.object({}),
-    execute: async () => {
-      // simulate network delay
-      await sleep(DELAY_MS);
-
-      const location = { lat: 37.7749, lon: -122.4194 };
-      return `Your location is at latitude ${location.lat} and longitude ${location.lon}`;
-    },
-  }),
-
-  getWeather: tool({
-    description: 'Get the weather for a location',
-    inputSchema: z.object({
-      city: z.string().describe('The city to get the weather for'),
-      unit: z
-        .enum(['C', 'F'])
-        .describe('The unit to display the temperature in'),
-    }),
-    execute: async ({ city, unit }) => {
-      // simulate network delay
-      await sleep(DELAY_MS);
-
-      const weather = {
-        value: 24,
-        description: 'Sunny',
-      };
-
-      return {
-        output:`It is currently ${weather.value}°${unit} and ${weather.description} in ${city}!`
-      };
-    },
-  }),
-} satisfies ToolSet;
 
 export type ChatTools = InferUITools<typeof tools>;
 
@@ -57,8 +21,36 @@ export async function POST(req: Request) {
     // Use Gemini 2.5 Flash with thinking enabled
     const result = streamText({
       model: google('gemini-2.5-flash'),
-      system: 'You are a helpful assistant.',
-      stopWhen: stepCountIs(5),
+      system: `You are ShaadiSaathi wedding AI agent.
+AVAILABLE TOOLS:
+1. getAvailableHalls() - Find wedding halls
+2. getAvailableCatering() - Find catering services
+3. getAvailablePhotography() - Find photographers
+4. getAvailableCars() - Find wedding cars
+5. getAvailableBuses() - Find guest transport
+6. checkVendorAvailability() - Check specific vendor
+7. calculateWeddingBudget() - Calculate total cost
+8. createBooking() - BOOK THE VENDOR (use when user confirms!)
+
+TOOL USAGE EXAMPLES:
+User: "400 guests ke liye hall chahiye, budget 10 lakh"
+→ Call: getAvailableHalls({ guestCount: 400, budget: 1000000 })
+
+User: "Book kar do Royal Banquet"
+→ Call: checkVendorAvailability({ vendorId: "hall_001", date: userDate })
+→ If available, call: createBooking({ vendorId: "hall_001", eventDate: userDate })
+
+IMPORTANT:
+- Always check availability before booking
+- Calculate costs and warn if over budget
+- Show max 3-5 options at a time
+- only give vendor IDs from the data
+- If user wants to book, confirm details first
+- Politely handle unavailability by suggesting alternatives
+- Ask for missing info if needed (guest count, date, location, budget)
+- Stay within a 5 step conversation limit
+- After booking, congratulate user!`,
+      stopWhen: stepCountIs(10),
       // prompt: 'Explain the theory of relativity in simple terms.',
       messages: convertToModelMessages(messages),
       tools,
