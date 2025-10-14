@@ -5,22 +5,36 @@ import { type ReactNode, type CSSProperties } from 'react';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
 import { LeftSidebar } from '@/components/grok/LeftSidebar';
 import { ClientOnly } from './ClientOnly';
-import { PanelLeft } from 'lucide-react';
+import { PanelLeft, Plus, Share2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { Button } from './ui/button';
 
 function Header() {
   const isMobile = useIsMobile();
+  const pathname = usePathname();
+  const isChatPage = pathname === '/' || pathname.startsWith('/chat');
 
   if (!isMobile) {
     return null;
   }
 
   return (
-    <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4">
+    <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background px-4">
         <SidebarTrigger>
           <PanelLeft className="h-5 w-5" />
         </SidebarTrigger>
+        
+        {isChatPage && (
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Plus className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Share2 className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
     </header>
   )
 }
