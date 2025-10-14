@@ -40,20 +40,6 @@ const GeminiReasoningChat = () => {
 
   return (
     <main className="flex flex-col h-full w-full overflow-hidden relative  custom-scrollbar-overlay with-scroll-padding">
-      {/* Messages Container - Takes remaining space */}
-       {!isMobile && (
-        <header className="sticky w-full border-b top-0 right-0 z-10 px-4 py-2 flex items-center gap-2 justify-end bg-background">
-          <Button variant="ghost" className=" hover:text-foreground">
-            <Plus className="mr-2 h-4 w-4" />
-            New Chat
-          </Button>
-          <Button variant="ghost" className=" hover:text-foreground">
-            Share
-            <Share2 className="ml-2 h-4 w-4" />
-          </Button>
-        </header>
-      )}
-
       <div className="w-full overflow-auto flex-1">
         <Conversation className="bg-transparent h-full ">
           <ConversationContent className="bg-transparent max-w-4xl w-full mx-auto">

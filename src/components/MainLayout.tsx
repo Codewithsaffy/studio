@@ -15,12 +15,21 @@ function Header() {
   const pathname = usePathname();
   const isChatPage = pathname === '/' || pathname.startsWith('/chat');
 
-  if (!isMobile) {
-    return null;
-  }
+  const desktopChatHeader = (
+    <header className="sticky w-full border-b top-0 right-0 z-10 px-4 py-2 flex items-center gap-2 justify-end bg-background">
+      <Button variant="ghost" className=" hover:text-foreground">
+        <Plus className="mr-2 h-4 w-4" />
+        New Chat
+      </Button>
+      <Button variant="ghost" className=" hover:text-foreground">
+        Share
+        <Share2 className="ml-2 h-4 w-4" />
+      </Button>
+    </header>
+  );
 
-  return (
-    <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background px-4">
+  const mobileHeader = (
+     <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background px-4">
         <SidebarTrigger>
           <PanelLeft className="h-5 w-5" />
         </SidebarTrigger>
@@ -36,7 +45,17 @@ function Header() {
           </div>
         )}
     </header>
-  )
+  );
+
+  if (isMobile) {
+    return mobileHeader;
+  }
+  
+  if(isChatPage) {
+    return desktopChatHeader;
+  }
+
+  return null;
 }
 
 export function MainLayout({ children }: { children: ReactNode }) {
