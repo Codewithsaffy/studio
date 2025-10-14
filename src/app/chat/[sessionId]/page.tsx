@@ -36,14 +36,34 @@ import { use, useEffect, useState } from "react";
 import { dummyVendors, Vendor } from "@/lib/data";
 import VendorCard from "@/components/vendors/VendorCard";
 import VendorDetailModal from "@/components/vendors/VendorDetailModal";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Params = Promise<{ sessionId: string }>;
 
 const GeminiReasoningChat = (props: { params: Params }) => {
+  const { data: session, status: sessionStatus } = useSession();
+  const router = useRouter();
   const { messages, sendMessage, status } = useChat();
   const [initialMessageProcessed, setInitialMessageProcessed] = useState(false);
   const sessionId = use(props.params).sessionId;
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+
+  // Redirect to login if user is not authenticated
+  useEffect(() => {
+    if (sessionStatus === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [sessionStatus, router]);
+
+  // Show loading while checking session status
+  if (sessionStatus === "loading") {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader />
+      </div>
+    );
+  }
 
   function extractProductIds(text: string): string[] {
     if (!text) return [];
@@ -57,6 +77,11 @@ const GeminiReasoningChat = (props: { params: Params }) => {
   }
   const handleSubmit = (prompt: string) => {
     if (typeof prompt === "string" && prompt.trim() !== "") {
+      // Check if user is authenticated before sending
+      if (sessionStatus === "unauthenticated") {
+        router.push("/login");
+        return;
+      }
       sendMessage({ text: prompt });
     }
   };
@@ -66,6 +91,11 @@ const GeminiReasoningChat = (props: { params: Params }) => {
       const storedMessage = localStorage.getItem("initialMessage");
       if (storedMessage) {
         try {
+          // Check if user is authenticated before processing stored message
+          if (sessionStatus === "unauthenticated") {
+            router.push("/login");
+            return;
+          }
           // Process the initial message using the centralized function
           sendMessage({ text: storedMessage });
 
@@ -77,7 +107,7 @@ const GeminiReasoningChat = (props: { params: Params }) => {
       }
       setInitialMessageProcessed(true);
     }
-  }, [initialMessageProcessed, sessionId, sendMessage]);
+  }, [initialMessageProcessed, sessionId, sendMessage, sessionStatus, router]);
 
   return (
     <main className="flex flex-col h-full w-full overflow-hidden relative  custom-scrollbar-overlay with-scroll-padding">

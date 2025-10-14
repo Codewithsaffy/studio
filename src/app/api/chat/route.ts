@@ -2,6 +2,8 @@ import { streamText, convertToModelMessages, InferUITools, UIMessage, UIDataType
 import { google } from '@ai-sdk/google';
 import { tools } from './tools';
 import { SYSTEM_PROMPT } from './prompt';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 
 export const maxDuration = 60;
 
@@ -13,6 +15,16 @@ export type ChatMessage = UIMessage<never, UIDataTypes, ChatTools>;
 
 export async function POST(req: Request) {
   try {
+    // Check if user is authenticated
+    const session = await getServerSession(authOptions);
+    
+    if (!session || !session.user) {
+      return new Response(JSON.stringify({ error: 'Authentication required' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     const { messages } = await req.json();
 
     // Use Gemini 2.5 Flash with thinking enabled
