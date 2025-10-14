@@ -176,21 +176,19 @@ export function LeftSidebar() {
             <SidebarMenuItem>
               <Collapsible open={isVendorsOpen} onOpenChange={setIsVendorsOpen}>
                 <CollapsibleTrigger asChild>
-                   <Link href="/vendors" className="w-full">
-                    <SidebarMenuButton
-                      className="w-full justify-between"
-                      isActive={pathname.startsWith("/vendors")}
-                      tooltip="Vendors"
-                    >
-                        <div className="flex items-center gap-3">
-                         <Store />
-                          <span className="group-data-[collapsible=icon]:hidden">
-                            Vendors
-                          </span>
-                        </div>
-                      <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
-                    </SidebarMenuButton>
-                  </Link>
+                  <SidebarMenuButton
+                    className="w-full justify-between"
+                    isActive={pathname.startsWith("/vendors")}
+                    tooltip="Vendors"
+                  >
+                    <Link href="/vendors" className="flex items-center gap-3">
+                      <Store />
+                      <span className="group-data-[collapsible=icon]:hidden">
+                        Vendors
+                      </span>
+                    </Link>
+                    <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
+                  </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarGroup className="p-0 mt-1 group-data-[collapsible=icon]:hidden">
@@ -220,7 +218,7 @@ export function LeftSidebar() {
           <ScrollArea className="h-full">
             <SidebarMenuItem>
               <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
-                <CollapsibleTrigger className="w-full">
+                <CollapsibleTrigger asChild>
                    <SidebarMenuButton className="w-full justify-between" tooltip="History">
                      <div className="flex items-center gap-3">
                         <History />
