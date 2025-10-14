@@ -29,21 +29,21 @@ export async function POST(request: NextRequest) {
         if (!vendor) {
             return NextResponse.json({ success: false, message: 'Vendor not found' }, { status: 404 });
         }
-        
+
         const user = await User.findById(session.user.id);
-        if(!user) {
+        if (!user) {
             return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
         }
 
         // Check if vendor is already booked for this date in our dummy data (and in real DB)
         const dateOnly = new Date(bookingDate).toISOString().split('T')[0];
-        if(vendor.bookedDates.includes(dateOnly)) {
+        if (vendor.bookedDates.includes(dateOnly)) {
             return NextResponse.json({ success: false, message: 'This date is no longer available' }, { status: 409 });
         }
 
         const existingBooking = await Booking.findOne({ vendorId, bookingDate });
-        if(existingBooking) {
-             return NextResponse.json({ success: false, message: 'This date is no longer available' }, { status: 409 });
+        if (existingBooking) {
+            return NextResponse.json({ success: false, message: 'This date is no longer available' }, { status: 409 });
         }
 
 
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         });
 
         await newBooking.save();
-        
+
         // In a real app, you would update the vendor's booked dates here.
         // For this demo, we're not modifying the dummy data source.
 
