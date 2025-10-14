@@ -372,7 +372,9 @@ export default function VendorDetailModal({ vendor, isOpen, onClose }: VendorDet
                 <Button variant="outline" size="lg"><Phone className="mr-2 h-4 w-4"/> Call</Button>
                 <Button variant="outline" size="lg"><MessageSquare className="mr-2 h-4 w-4"/> WhatsApp</Button>
             </div>
-             <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">Book Now</Button>
+             <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90" onClick={handleBooking} disabled={isBooking}>
+               {isBooking ? 'Booking...' : 'Book Now'}
+             </Button>
           </div>
         </div>
       </DialogContent>

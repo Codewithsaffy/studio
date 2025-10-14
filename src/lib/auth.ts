@@ -110,9 +110,18 @@ export const authOptions: NextAuthOptions = {
             }
             return true;
         },
-        async jwt({ token, user }) {
+        async jwt({ token, user, account, profile }) {
+            // For credential users, user object comes from authorize and has MongoDB _id
             if (user) {
                 token.id = user.id;
+            }
+            // For Google users, ensure we have the database user's MongoDB _id
+            else if (token.email) {  // The token should have email after Google sign-in
+                await dbConnect();
+                const dbUser = await User.findOne({ email: token.email });
+                if (dbUser) {
+                    token.id = dbUser._id.toString();
+                }
             }
             return token;
         },
