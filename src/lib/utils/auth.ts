@@ -37,6 +37,7 @@ interface User {
 
 export const sanitizeUser = (user: User) => {
     const userObj = typeof user.toObject === 'function' ? user.toObject() : user;
-    const { password, emailVerificationToken, passwordResetToken, ...sanitizedUser } = userObj;
-    return sanitizedUser;
+    const { password, emailVerificationToken, passwordResetToken, _id, ...sanitizedUser } = userObj;
+    // Ensure the id is available as 'id' for NextAuth
+    return { ...sanitizedUser, id: _id?.toString() };
 };

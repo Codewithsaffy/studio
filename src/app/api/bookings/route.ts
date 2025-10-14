@@ -63,12 +63,18 @@ export async function POST(request: NextRequest) {
         // In a real app, you would update the vendor's booked dates here.
         // For this demo, we're not modifying the dummy data source.
 
-        await sendBookingConfirmationEmail(user.email, {
-            name: user.name,
-            vendorName: vendor.name,
-            bookingDate: new Date(bookingDate),
-            totalPrice: totalPrice,
-        });
+        // Send booking confirmation email (optional - don't fail if email fails)
+        try {
+            await sendBookingConfirmationEmail(user.email, {
+                name: user.name,
+                vendorName: vendor.name,
+                bookingDate: new Date(bookingDate),
+                totalPrice: totalPrice,
+            });
+        } catch (emailError) {
+            console.error('Failed to send booking confirmation email:', emailError);
+            // Don't fail the booking if email sending fails
+        }
 
         return NextResponse.json({
             success: true,

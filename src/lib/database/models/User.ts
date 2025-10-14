@@ -51,7 +51,7 @@ const UserSchema = new Schema<IUser>({
     },
     provider: {
         type: String,
-        enum: ['credentials', 'google', 'github'],
+        enum: ['credentials', 'google'],
         default: 'credentials'
     },
     providerId: {
@@ -90,8 +90,13 @@ const UserSchema = new Schema<IUser>({
 UserSchema.index({ emailVerificationToken: 1 });
 UserSchema.index({ passwordResetToken: 1 });
 
-// Hashingg th password before saving
+// Generate providerId and hash password before saving
 UserSchema.pre('save', async function (next) {
+    // Generate a unique providerId for credential users if not provided
+    if (this.provider === 'credentials' && !this.providerId) {
+        this.providerId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+
     // Only hash the password if it has been modified (or is new)
     if (!this.isModified('password') || !this.password) return next();
 
