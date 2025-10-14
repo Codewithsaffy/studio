@@ -7,28 +7,24 @@ import { LeftSidebar } from '@/components/grok/LeftSidebar';
 import { ClientOnly } from './ClientOnly';
 import { PanelLeft } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from './ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
-function Header({ className }: { className?: string }) {
+function Header() {
   const isMobile = useIsMobile();
+
+  if (!isMobile) {
+    return null;
+  }
+
   return (
-    <header className={cn("sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6", className)}>
-        {isMobile && (
-          <div className="flex items-center gap-2">
-            <SidebarTrigger>
-              <PanelLeft className="h-5 w-5" />
-            </SidebarTrigger>
-            <Link href="/" className="flex items-center gap-2">
-              <h1 className="font-bold text-lg heading-gradient">MehfilAI</h1>
-            </Link>
-          </div>
-        )}
-        {!isMobile && <div />}
-        <Button variant="outline" asChild>
-            <Link href="/vendors">Explore Vendors</Link>
-        </Button>
+    <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4">
+        <SidebarTrigger>
+          <PanelLeft className="h-5 w-5" />
+        </SidebarTrigger>
+        <Link href="/" className="flex items-center gap-2">
+            <h1 className="font-bold text-lg heading-gradient">MehfilAI</h1>
+        </Link>
     </header>
   )
 }
@@ -57,7 +53,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
           <LeftSidebar />
         </ClientOnly>
         <SidebarInset className="flex flex-col">
-          {isChatPage && <Header className="sm:hidden" />}
+           <Header />
           <div className={cn("flex-1", isChatPage && "overflow-y-auto")}>
             {children}
           </div>
