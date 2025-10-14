@@ -1,4 +1,5 @@
-"use client";
+
+'use client';
 
 import { useContext, useState, useEffect } from "react";
 import Link from "next/link";
@@ -24,14 +25,13 @@ import {
 } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
-  Building2,
+  Store,
   Building,
   Bus,
   Camera,
   Car,
-  ChevronsUpDown,
+  ChevronDown,
   History,
   Inbox,
   MessageSquare,
@@ -42,15 +42,14 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ChatContext } from "@/context/ChatContext";
-import { isToday, isYesterday } from "date-fns";
+import { isToday, isYesterday, formatDistanceToNow } from "date-fns";
 import type { Conversation } from "@/types";
 import { AuthButtons } from "@/components/AuthButtons";
 import { cn } from "@/lib/utils";
 
 export function LeftSidebar() {
-  const { state, toggleSidebar } = useSidebar();
+  const { state, isMobile, setOpenMobile } = useSidebar();
   const pathname = usePathname();
-  const [isMac, setIsMac] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const [isVendorsOpen, setIsVendorsOpen] = useState(false);
 
@@ -58,8 +57,11 @@ export function LeftSidebar() {
     useContext(ChatContext);
 
   useEffect(() => {
-    setIsMac(navigator.platform.toUpperCase().indexOf("MAC") >= 0);
-  }, []);
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [pathname, isMobile, setOpenMobile]);
+
 
   const isCollapsed = state === "collapsed";
 
@@ -69,6 +71,7 @@ export function LeftSidebar() {
       Yesterday: [],
       "Previous 7 Days": [],
       "Previous 30 Days": [],
+      Older: [],
     };
 
     convos.forEach((convo) => {
@@ -82,8 +85,10 @@ export function LeftSidebar() {
           (new Date().getTime() - date.getTime()) / (1000 * 3600 * 24);
         if (diffDays <= 7) {
           groups["Previous 7 Days"].push(convo);
-        } else {
+        } else if (diffDays <= 30) {
           groups["Previous 30 Days"].push(convo);
+        } else {
+          groups.Older.push(convo);
         }
       }
     });
@@ -102,32 +107,39 @@ export function LeftSidebar() {
   ];
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarRail />
+    <Sidebar>
       <SidebarHeader>
         <div
           className={cn(
             "flex items-center p-2",
-            isCollapsed ? "justify-center" : "justify-end"
+            isCollapsed && !isMobile ? "justify-center" : "justify-between"
           )}
         >
-          <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-            <PanelLeft
-              className={cn(
-                "h-5 w-5 transition-transform",
-                isCollapsed && "rotate-180"
-              )}
-            />
-          </Button>
+          {(!isCollapsed || isMobile) && (
+             <Link href="/" className="flex items-center gap-2">
+              <h1 className="font-bold text-lg heading-gradient">MehfilAI</h1>
+            </Link>
+          )}
+          {!isMobile && (
+            <SidebarTrigger>
+              <PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/>
+            </SidebarTrigger>
+          )}
         </div>
       </SidebarHeader>
       <SidebarContent className="flex flex-col">
-        {/* Main navigation - fixed at top */}
         <div className="flex-shrink-0">
           <SidebarMenu>
             <SidebarMenuItem>
               <Link href="/" className="w-full">
-                <SidebarMenuButton tooltip="Agent" isActive={pathname === "/"}>
+                <SidebarMenuButton
+                  tooltip="Agent"
+                  isActive={
+                    pathname === "/" ||
+                    (pathname.startsWith("/chat") &&
+                      activeConversation === null)
+                  }
+                >
                   <MessageSquare />
                   <span className="group-data-[collapsible=icon]:hidden">
                     Agent
@@ -161,142 +173,109 @@ export function LeftSidebar() {
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
-          </SidebarMenu>
 
-          {/* Vendors Section - fixed */}
-          <Collapsible
-            open={isVendorsOpen}
-            onOpenChange={setIsVendorsOpen}
-            className="mt-4"
-          >
-            <div
-              className={cn(
-                "group-data-[collapsible=icon]:hidden px-2 pb-2",
-                isCollapsed && "hidden"
-              )}
-            >
-              <div
-                className={cn(
-                  "w-full justify-start px-2 flex items-center rounded-md",
-                  pathname.startsWith("/vendors") &&
-                    "bg-sidebar-accent text-sidebar-accent-foreground"
-                )}
-              >
-                <Link href="/vendors" className="flex-1 flex items-center p-2">
-                  <Building2 className="mr-2 h-4 w-4" />
-                  <span>Vendors</span>
-                </Link>
-                <CollapsibleTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 shrink-0"
-                  >
-                    <ChevronsUpDown className="h-4 w-4" />
-                  </Button>
-                </CollapsibleTrigger>
-              </div>
-            </div>
-            <SidebarMenu
-              className={cn(
-                "hidden",
-                !isCollapsed && "hidden",
-                isCollapsed && "flex"
-              )}
-            >
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  tooltip="Vendors"
-                  asChild
-                  isActive={pathname.startsWith("/vendors")}
-                >
-                  <CollapsibleTrigger>
-                    <Link href="/vendors">
-                      <Building2 />
-                    </Link>
-                  </CollapsibleTrigger>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-            <CollapsibleContent>
-              <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-                <SidebarMenu>
-                  {vendorLinks.map((link) => (
-                    <SidebarMenuItem key={link.href}>
-                      <Link href={link.href} className="w-full">
-                        <SidebarMenuButton isActive={pathname === link.href}>
-                          <link.icon className="mr-2 h-4 w-4" />
-                          {link.label}
-                        </SidebarMenuButton>
-                      </Link>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroup>
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
-
-        {/* History Section - scrollable, takes remaining space */}
-        <Collapsible
-          open={isHistoryOpen}
-          onOpenChange={setIsHistoryOpen}
-          className="flex flex-col flex-1 min-h-0 mt-4"
-        >
-          <div className="flex-shrink-0 group-data-[collapsible=icon]:hidden px-2 pb-2">
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start px-2">
-                <History className="mr-2 h-4 w-4" />
-                <span>History</span>
-                <ChevronsUpDown className="ml-auto h-4 w-4" />
-              </Button>
-            </CollapsibleTrigger>
-          </div>
-          <SidebarMenu className="flex-shrink-0 hidden group-data-[collapsible=icon]:flex">
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip="History" asChild>
-                <CollapsibleTrigger>
-                  <History />
+              <Collapsible open={isVendorsOpen} onOpenChange={setIsVendorsOpen}>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton
+                    className="w-full justify-between"
+                    isActive={pathname.startsWith("/vendors")}
+                    tooltip="Vendors"
+                  >
+                    <div className="flex items-center gap-3">
+                       <Link href="/vendors" className="flex items-center gap-3">
+                        <Building className="h-4 w-4" />
+                        <span className="group-data-[collapsible=icon]:hidden">
+                          Vendors
+                        </span>
+                      </Link>
+                    </div>
+                    <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
+                  </SidebarMenuButton>
                 </CollapsibleTrigger>
-              </SidebarMenuButton>
+                <CollapsibleContent>
+                  <SidebarGroup className="p-0 mt-1 group-data-[collapsible=icon]:hidden">
+                    <SidebarMenu>
+                      {vendorLinks.map((link) => (
+                        <SidebarMenuItem key={link.href}>
+                          <Link href={link.href} className="w-full">
+                            <SidebarMenuButton
+                              isActive={pathname === link.href}
+                              className="h-9"
+                            >
+                              <link.icon className="mr-3 h-4 w-4" />
+                              {link.label}
+                            </SidebarMenuButton>
+                          </Link>
+                        </SidebarMenuItem>
+                      ))}
+                    </SidebarMenu>
+                  </SidebarGroup>
+                </CollapsibleContent>
+              </Collapsible>
             </SidebarMenuItem>
           </SidebarMenu>
-          <CollapsibleContent className="flex-1 min-h-0 overflow-hidden">
-            <ScrollArea className="h-full">
-              <div className="px-2">
-                {Object.entries(groupedConversations).map(
-                  ([groupName, convos]) =>
-                    convos.length > 0 ? (
-                      <SidebarGroup
-                        key={groupName}
-                        className="group-data-[collapsible=icon]:hidden"
-                      >
-                        <SidebarGroupLabel>{groupName}</SidebarGroupLabel>
-                        <SidebarMenu>
-                          {convos.map((convo) => (
-                            <SidebarMenuItem key={convo.id}>
-                              <SidebarMenuButton
-                                isActive={activeConversation?.id === convo.id}
-                                onClick={() => loadConversation(convo.id)}
-                              >
-                                {convo.title}
-                              </SidebarMenuButton>
-                            </SidebarMenuItem>
-                          ))}
-                        </SidebarMenu>
-                      </SidebarGroup>
-                    ) : null
-                )}
-              </div>
-            </ScrollArea>
-          </CollapsibleContent>
-        </Collapsible>
+        </div>
+
+        <div className="flex-1 min-h-0">
+          <ScrollArea className="h-full">
+            <SidebarMenuItem>
+              <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
+                <CollapsibleTrigger asChild>
+                   <SidebarMenuButton className="w-full justify-between" tooltip="History">
+                     <div className="flex items-center gap-3">
+                        <History />
+                        <span className="group-data-[collapsible=icon]:hidden flex-1 text-left">
+                          History
+                        </span>
+                      </div>
+                    <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isHistoryOpen && "rotate-180")} />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <SidebarGroup className="p-0 mt-1 group-data-[collapsible=icon]:hidden">
+                    <SidebarMenu>
+                      {Object.entries(groupedConversations).map(
+                        ([groupName, convos]) =>
+                          convos.length > 0 ? (
+                            <div key={groupName} className="px-2">
+                              <SidebarGroupLabel>
+                                {groupName}
+                              </SidebarGroupLabel>
+                              <SidebarMenu>
+                                {convos.map((convo) => (
+                                  <SidebarMenuItem key={convo.id}>
+                                    <Link
+                                      href={`/chat/${convo.id}`}
+                                      className="w-full"
+                                    >
+                                      <SidebarMenuButton
+                                        isActive={
+                                          pathname === `/chat/${convo.id}`
+                                        }
+                                        className="h-9"
+                                      >
+                                        <span className="truncate">
+                                          {convo.title}
+                                        </span>
+                                      </SidebarMenuButton>
+                                    </Link>
+                                  </SidebarMenuItem>
+                                ))}
+                              </SidebarMenu>
+                            </div>
+                          ) : null
+                      )}
+                    </SidebarMenu>
+                  </SidebarGroup>
+                </CollapsibleContent>
+              </Collapsible>
+            </SidebarMenuItem>
+          </ScrollArea>
+        </div>
       </SidebarContent>
       <SidebarFooter>
         <div className="flex flex-col gap-2 p-2">
-          <div className="group-data-[collapsible=icon]:hidden">
-            <ThemeToggle />
-          </div>
           <AuthButtons />
         </div>
       </SidebarFooter>

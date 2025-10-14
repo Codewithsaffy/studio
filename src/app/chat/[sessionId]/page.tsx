@@ -77,23 +77,11 @@ const GeminiReasoningChat = (props: { params: Params }) => {
       }
       setInitialMessageProcessed(true);
     }
-  }, [initialMessageProcessed, sessionId]);
+  }, [initialMessageProcessed, sessionId, sendMessage]);
 
   return (
-    <main className="flex flex-col h-screen w-full overflow-hidden relative  custom-scrollbar-overlay with-scroll-padding">
-      {/* Messages Container - Takes remaining space */}
-      <header className="sticky w-full border-b top-0 right-0 z-10 px-4 py-2 flex items-center gap-2 justify-end">
-        <Button variant="ghost" className=" hover:text-foreground">
-          <Plus className="mr-2 h-4 w-4" />
-          New Chat
-        </Button>
-        <Button variant="ghost" className=" hover:text-foreground">
-          Share
-          <Share2 className="ml-2 h-4 w-4" />
-        </Button>
-      </header>
-
-      <div className="w-full overflow-auto h-[calc(100vh-8rem)] ">
+    <main className="flex flex-col h-full w-full overflow-hidden relative  custom-scrollbar-overlay with-scroll-padding">
+      <div className="w-full overflow-auto flex-1">
         <Conversation className=" h-full ">
           <ConversationContent className=" max-w-4xl w-full mx-auto">
             {messages.map((message) => (
@@ -261,7 +249,7 @@ const GeminiReasoningChat = (props: { params: Params }) => {
       </div>
 
       {/* Input Container - Fixed at bottom */}
-      <div className="absolute w-full max-w-4xl px-4 bottom-0 py-4 bg-background left-1/2 -translate-x-1/2">
+      <div className="w-full max-w-4xl px-4 py-4 bg-background mx-auto">
         <PromptInput onSubmit={handleSubmit} />
       </div>
     </main>
@@ -269,10 +257,3 @@ const GeminiReasoningChat = (props: { params: Params }) => {
 };
 
 export default GeminiReasoningChat;
-// import React from 'react'
-
-// const Chat = () => {
-//   return (
-//     <div>Chat</div>
-//   )
-// }
