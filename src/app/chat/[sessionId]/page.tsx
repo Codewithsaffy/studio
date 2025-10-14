@@ -17,7 +17,6 @@ import { useChat } from "@ai-sdk/react";
 import { PromptInput } from "@/components/grok/PromptInput";
 import {
   Copy,
-  Plus,
   RefreshCw,
   Share2,
   ThumbsDown,
@@ -36,14 +35,22 @@ import { use, useEffect, useState } from "react";
 import { dummyVendors, Vendor } from "@/lib/data";
 import VendorCard from "@/components/vendors/VendorCard";
 import VendorDetailModal from "@/components/vendors/VendorDetailModal";
+import { useSession } from "next-auth/react";
 
 type Params = Promise<{ sessionId: string }>;
 
 const GeminiReasoningChat = (props: { params: Params }) => {
-  const { messages, sendMessage, status } = useChat();
+  const { messages, sendMessage, status } = useChat({
+    
+    onFinish:(message)=>{
+      console.log("END",message)
+    }
+  });
   const [initialMessageProcessed, setInitialMessageProcessed] = useState(false);
   const sessionId = use(props.params).sessionId;
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+
+  // console.log(JSON.stringify(messages, null, 2));
 
   function extractProductIds(text: string): string[] {
     if (!text) return [];
@@ -60,7 +67,6 @@ const GeminiReasoningChat = (props: { params: Params }) => {
       sendMessage({ text: prompt });
     }
   };
-  console.log(status);
   useEffect(() => {
     if (!initialMessageProcessed) {
       const storedMessage = localStorage.getItem("initialMessage");
@@ -99,12 +105,10 @@ const GeminiReasoningChat = (props: { params: Params }) => {
                           const vendors = dummyVendors.filter((v) =>
                             ids.includes(v.id)
                           );
-                          console.log(vendors);
                           const cleanedText = (part.text || "")
                             .replace(/\[PRODUCTS\]\s*:?\s*\[[^\]]+\]/i, "")
                             .trim();
 
-                          console.log(ids);
                           return (
                             <div key={`${message.id}-${i}`}>
                               {cleanedText ? (
@@ -120,6 +124,7 @@ const GeminiReasoningChat = (props: { params: Params }) => {
                                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
                                   {vendors.map((vendor) => (
                                     <VendorCard
+                                    key={vendor.id}
                                       vendor={vendor}
                                       onViewDetails={() =>
                                         setSelectedVendor(vendor)
