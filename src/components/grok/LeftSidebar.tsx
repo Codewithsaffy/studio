@@ -31,7 +31,7 @@ import {
   Bus,
   Camera,
   Car,
-  ChevronsUpDown,
+  ChevronDown,
   History,
   Inbox,
   MessageSquare,
@@ -116,14 +116,9 @@ export function LeftSidebar() {
             isCollapsed ? "justify-center" : "justify-between"
           )}
         >
-          <h1
-            className={cn(
-              "font-bold text-lg heading-gradient",
-              isCollapsed && "hidden"
-            )}
-          >
-            MehfilAI
-          </h1>
+          {!isCollapsed && (
+            <h1 className="font-bold text-lg heading-gradient">MehfilAI</h1>
+          )}
           <SidebarTrigger variant="ghost" size="icon">
             <PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/>
           </SidebarTrigger>
@@ -189,7 +184,7 @@ export function LeftSidebar() {
                         Vendors
                       </span>
                     </Link>
-                    <ChevronsUpDown className="h-3.5 w-3.5 ml-auto group-data-[collapsible=icon]:hidden" />
+                    <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
@@ -226,7 +221,7 @@ export function LeftSidebar() {
                     <span className="group-data-[collapsible=icon]:hidden flex-1 text-left">
                       History
                     </span>
-                    <ChevronsUpDown className="h-3.5 w-3.5 ml-auto group-data-[collapsible=icon]:hidden" />
+                    <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isHistoryOpen && "rotate-180")} />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
