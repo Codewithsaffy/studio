@@ -184,7 +184,7 @@ export function LeftSidebar() {
                   >
                     <div className="flex items-center gap-3">
                        <Link href="/vendors" className="flex items-center gap-3">
-                        <Building />
+                        <Building className="h-4 w-4" />
                         <span className="group-data-[collapsible=icon]:hidden">
                           Vendors
                         </span>
