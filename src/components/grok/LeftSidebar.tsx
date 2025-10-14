@@ -1,5 +1,5 @@
 
-"use client";
+'use client';
 
 import { useContext, useState, useEffect } from "react";
 import Link from "next/link";
@@ -112,20 +112,22 @@ export function LeftSidebar() {
         <div
           className={cn(
             "flex items-center p-2",
-            isCollapsed ? "justify-center" : "justify-between"
+            isCollapsed && !isMobile ? "justify-center" : "justify-between"
           )}
         >
-          {!isCollapsed && (
+          {(!isCollapsed || isMobile) && (
              <Link href="/" className="flex items-center gap-2">
               <h1 className="font-bold text-lg heading-gradient">MehfilAI</h1>
             </Link>
           )}
-          <SidebarTrigger>
-            <PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/>
-          </SidebarTrigger>
+          {!isMobile && (
+            <SidebarTrigger>
+              <PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/>
+            </SidebarTrigger>
+          )}
         </div>
       </SidebarHeader>
-      <SidebarContent className="flex flex-col overflow-y-auto overflow-x-hidden">
+      <SidebarContent className="flex flex-col">
         <div className="flex-shrink-0">
           <SidebarMenu>
             <SidebarMenuItem>
@@ -181,10 +183,12 @@ export function LeftSidebar() {
                     tooltip="Vendors"
                   >
                     <div className="flex items-center gap-3">
-                      <Store />
-                      <span className="group-data-[collapsible=icon]:hidden">
-                        Vendors
-                      </span>
+                       <Link href="/vendors" className="flex items-center gap-3">
+                        <Store />
+                        <span className="group-data-[collapsible=icon]:hidden">
+                          Vendors
+                        </span>
+                      </Link>
                     </div>
                     <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
                   </SidebarMenuButton>

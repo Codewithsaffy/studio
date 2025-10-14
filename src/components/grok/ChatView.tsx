@@ -1,3 +1,4 @@
+
 "use client";
 
 import { PromptInput } from "@/components/grok/PromptInput";
@@ -22,7 +23,7 @@ export function ChatView() {
       <main
         className={`flex-1 overflow-y-auto transition-all duration-500 pb-40`}
       >
-        <div className="flex flex-col items-center text-center px-4 pt-16 md:pt-[25vh]">
+        <div className="flex flex-col items-center text-center px-4 pt-[20vh]">
           <div className="w-full max-w-4xl flex flex-col items-center justify-center gap-8">
             <div className="text-center">
               <h1 className="text-4xl font-headline font-bold tracking-tight sm:text-6xl max-w-2xl mx-auto heading-gradient">
