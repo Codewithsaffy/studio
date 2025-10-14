@@ -4,7 +4,7 @@ import type React from "react";
 
 import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles } from "lucide-react";
-import { FaGithub, FaGoogle } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -193,15 +193,6 @@ const LoginPage = () => {
             >
               <FaGoogle className="h-5 w-5" />
               <span className="font-medium">Continue with Google</span>
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => signIn("github", { callbackUrl: "/" })}
-              className="w-full h-12 flex items-center justify-center gap-3 border-border/50 hover:bg-muted hover:border-primary/40 transition-all text-base"
-              type="button"
-            >
-              <FaGithub className="h-5 w-5" />
-              <span className="font-medium">Continue with GitHub</span>
             </Button>
           </div>
 
