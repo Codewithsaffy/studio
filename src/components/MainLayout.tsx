@@ -6,7 +6,6 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/s
 import { LeftSidebar } from '@/components/grok/LeftSidebar';
 import { ClientOnly } from './ClientOnly';
 import { PanelLeft } from 'lucide-react';
-import Link from 'next/link';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
@@ -22,9 +21,6 @@ function Header() {
         <SidebarTrigger>
           <PanelLeft className="h-5 w-5" />
         </SidebarTrigger>
-        <Link href="/" className="flex items-center gap-2">
-            <h1 className="font-bold text-lg heading-gradient">MehfilAI</h1>
-        </Link>
     </header>
   )
 }
@@ -49,15 +45,17 @@ export function MainLayout({ children }: { children: ReactNode }) {
         } as CSSProperties
       }
     >
+      <>
         <ClientOnly>
           <LeftSidebar />
         </ClientOnly>
-        <SidebarInset className="flex flex-col">
+        <SidebarInset className="flex flex-col h-screen">
            <Header />
           <div className={cn("flex-1", isChatPage && "overflow-y-auto")}>
             {children}
           </div>
         </SidebarInset>
+      </>
     </SidebarProvider>
   );
 }
