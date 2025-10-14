@@ -48,7 +48,7 @@ import { AuthButtons } from "@/components/AuthButtons";
 import { cn } from "@/lib/utils";
 
 export function LeftSidebar() {
-  const { state, toggleSidebar, isMobile, setOpenMobile } = useSidebar();
+  const { state, isMobile, setOpenMobile } = useSidebar();
   const pathname = usePathname();
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const [isVendorsOpen, setIsVendorsOpen] = useState(false);
@@ -107,8 +107,7 @@ export function LeftSidebar() {
   ];
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarRail />
+    <Sidebar>
       <SidebarHeader>
         <div
           className={cn(
@@ -121,7 +120,7 @@ export function LeftSidebar() {
               <h1 className="font-bold text-lg heading-gradient">MehfilAI</h1>
             </Link>
           )}
-          <SidebarTrigger variant="ghost" size="icon">
+          <SidebarTrigger>
             <PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/>
           </SidebarTrigger>
         </div>
@@ -181,12 +180,12 @@ export function LeftSidebar() {
                     isActive={pathname.startsWith("/vendors")}
                     tooltip="Vendors"
                   >
-                    <Link href="/vendors" className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
                       <Store />
                       <span className="group-data-[collapsible=icon]:hidden">
                         Vendors
                       </span>
-                    </Link>
+                    </div>
                     <ChevronDown className={cn("h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
