@@ -192,7 +192,7 @@ export function LeftSidebar() {
                         Vendors
                       </span>
                     </Link>
-                    <ChevronsUpDown className="h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden" />
+                    <ChevronsUpDown className="h-3.5 w-3.5 ml-auto group-data-[collapsible=icon]:hidden" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
@@ -229,7 +229,7 @@ export function LeftSidebar() {
                     <span className="group-data-[collapsible=icon]:hidden flex-1 text-left">
                       History
                     </span>
-                    <ChevronsUpDown className="h-4 w-4 ml-auto group-data-[collapsible=icon]:hidden" />
+                    <ChevronsUpDown className="h-3.5 w-3.5 ml-auto group-data-[collapsible=icon]:hidden" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
