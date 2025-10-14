@@ -1,3 +1,4 @@
+
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -13,7 +14,7 @@ import { Button } from './ui/button';
 function Header() {
   const isMobile = useIsMobile();
   const pathname = usePathname();
-  const isChatPage = pathname === '/' || pathname.startsWith('/chat');
+  const isChatPage = pathname.startsWith('/chat');
 
   const desktopChatHeader = (
     <header className="sticky w-full border-b top-0 right-0 z-10 px-4 py-2 flex items-center gap-2 justify-end bg-background">
@@ -67,7 +68,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
     return <>{children}</>;
   }
 
-  const isChatPage = pathname === '/' || pathname.startsWith('/chat');
+  const isChatPage = pathname.startsWith('/chat');
 
   return (
     <SidebarProvider
