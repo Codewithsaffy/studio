@@ -48,9 +48,8 @@ import { AuthButtons } from "@/components/AuthButtons";
 import { cn } from "@/lib/utils";
 
 export function LeftSidebar() {
-  const { state, toggleSidebar } = useSidebar();
+  const { state, toggleSidebar, isMobile, setOpenMobile } = useSidebar();
   const pathname = usePathname();
-  const [isMac, setIsMac] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(true);
   const [isVendorsOpen, setIsVendorsOpen] = useState(false);
 
@@ -58,8 +57,11 @@ export function LeftSidebar() {
     useContext(ChatContext);
 
   useEffect(() => {
-    setIsMac(navigator.platform.toUpperCase().indexOf("MAC") >= 0);
-  }, []);
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  }, [pathname, isMobile, setOpenMobile]);
+
 
   const isCollapsed = state === "collapsed";
 
@@ -122,14 +124,16 @@ export function LeftSidebar() {
           >
             MehfilAI
           </h1>
-          <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-            <PanelLeft
-              className={cn(
-                "h-5 w-5 transition-transform",
-                isCollapsed && "rotate-180"
-              )}
-            />
-          </Button>
+          <SidebarTrigger asChild>
+             <Button variant="ghost" size="icon">
+                <PanelLeft
+                  className={cn(
+                    "h-5 w-5 transition-transform",
+                    isCollapsed && "rotate-180"
+                  )}
+                />
+              </Button>
+          </SidebarTrigger>
         </div>
       </SidebarHeader>
       <SidebarContent className="flex flex-col overflow-y-auto overflow-x-hidden">
