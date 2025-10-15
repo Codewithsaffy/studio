@@ -101,7 +101,6 @@ const GeminiReasoningChat = (props: { params: Params }) => {
   }, [session]);
 
   useEffect(() => {
-
     if (!initialMessageProcessed) {
       const storedMessage = localStorage.getItem("initialMessage");
       if (storedMessage) {
@@ -120,7 +119,7 @@ const GeminiReasoningChat = (props: { params: Params }) => {
       setInitialMessageProcessed(true);
     }
 
-  }, [initialMessageProcessed, sessionId, sendMessage]);
+  }, [initialMessageProcessed, sessionId, sendMessage, ]);
 
   return (
     <main className="flex flex-col h-full w-full overflow-hidden relative  custom-scrollbar-overlay with-scroll-padding">

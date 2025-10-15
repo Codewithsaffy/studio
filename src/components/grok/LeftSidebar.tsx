@@ -41,6 +41,7 @@ import {
 import { AuthButtons } from "@/components/AuthButtons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export function LeftSidebar() {
   const { state, isMobile, setOpenMobile } = useSidebar();
@@ -107,9 +108,7 @@ export function LeftSidebar() {
           <div className="flex items-center gap-3">
             {!isCollapsed && (
               <>
-                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-                  <Menu className="h-4 w-4" />
-                </Button>
+                <Image src={"/logo.png"} height={25} width={25} alt="M"/>
                 <Link href="/" className="flex items-center gap-2">
                   <h1 className="font-semibold text-base">MehfilAI</h1>
                 </Link>
