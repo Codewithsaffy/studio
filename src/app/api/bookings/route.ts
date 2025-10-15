@@ -10,6 +10,7 @@ import { sendBookingConfirmationEmail } from '@/lib/services/emailService';
 
 export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions);
+    console.log(session)
 
     if (!session || !session.user || !session.user.id) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });

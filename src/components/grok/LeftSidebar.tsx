@@ -246,7 +246,7 @@ export function LeftSidebar() {
                         )}
                         tooltip={conv.title}
                       >
-                        <span className="truncate text-sm flex-1 text-left group-data-[collapsible=icon]:hidden">
+                        <span className="truncate text-muted-foreground text-sm flex-1 text-left group-data-[collapsible=icon]:hidden">
                           {conv.title}
                         </span>
                         <MoreHorizontal className="h-4 w-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity group-data-[collapsible=icon]:hidden" />
