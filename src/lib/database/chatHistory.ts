@@ -1,3 +1,4 @@
+"use server";
 import dbConnect from "./dbConnection";
 import { Conversation } from "./models/Conversions";
 
@@ -81,20 +82,28 @@ export async function appendMessage({
   message: MessageWithParts;
 }) {
   await dbConnect();
+  if (!userId || !sessionId) {
+    console.log("not found", userId, sessionId)
+    return
+  }
 
   try {
     const conversation = await Conversation.findOneAndUpdate(
-      { sessionId, userId },
-      {
-        $push: { messages: message },
-        $set: { updatedAt: new Date() },
-      },
-      {
-        upsert: true,
-        new: true,
-        setDefaultsOnInsert: true,
-      }
-    );
+  { sessionId, userId },
+  {
+    $push: { messages: message },
+    $setOnInsert: { 
+      sessionId, 
+      userId, 
+      createdAt: new Date() 
+    }
+  },
+  { 
+    upsert: true, 
+    new: true,
+    runValidators: true
+  }
+);
 
     // Auto-generate title from first user message
     if (conversation.title === 'New conversation' && message.role === 'user') {
@@ -108,7 +117,6 @@ export async function appendMessage({
         );
       }
     }
-
     return conversation;
   } catch (error) {
     console.error('Error appending message:', error);
@@ -170,7 +178,7 @@ export async function getUserConversations(userId: string) {
       let preview = '';
       
       if (lastMessage) {
-        const textPart = lastMessage.parts?.find(p => p.type === 'text');
+        const textPart = lastMessage.parts?.find((p:any) => p.type === 'text');
         if (textPart?.text) {
           // Remove [PRODUCTS] tags and clean up
           preview = textPart.text

@@ -13,7 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub, FaGoogle } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -368,15 +368,7 @@ const SignupPage = () => {
               <FaGoogle className="h-5 w-5" />
               <span className="font-medium">Continue with Google</span>
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => signIn("github", { callbackUrl: "/" })}
-              className="w-full h-12 flex items-center justify-center gap-3 border-border/50 hover:bg-muted hover:border-primary/40 transition-all text-base"
-              type="button"
-            >
-              <FaGithub className="h-5 w-5" />
-              <span className="font-medium">Continue with GitHub</span>
-            </Button>
+
           </div>
 
           <div className="mt-8 text-center text-base">

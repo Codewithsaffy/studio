@@ -36,21 +36,23 @@ import { dummyVendors, Vendor } from "@/lib/data";
 import VendorCard from "@/components/vendors/VendorCard";
 import VendorDetailModal from "@/components/vendors/VendorDetailModal";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { MessageWithParts } from "@/lib/database/chatHistory";
 
 type Params = Promise<{ sessionId: string }>;
 
 const GeminiReasoningChat = (props: { params: Params }) => {
-  const { messages, sendMessage, status } = useChat({
-    
+  const session = useSession()
+  const sessionId = use(props.params).sessionId;
+
+  const { messages, sendMessage, status, setMessages } = useChat({
     onFinish:(message)=>{
-      console.log("END",message)
+      appendMessageToConversation(sessionId, message.message)
     }
   });
   const [initialMessageProcessed, setInitialMessageProcessed] = useState(false);
-  const sessionId = use(props.params).sessionId;
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
 
-  // console.log(JSON.stringify(messages, null, 2));
 
   function extractProductIds(text: string): string[] {
     if (!text) return [];
@@ -62,18 +64,52 @@ const GeminiReasoningChat = (props: { params: Params }) => {
       .map((s) => s.trim())
       .filter(Boolean);
   }
-  const handleSubmit = (prompt: string) => {
+
+   const appendMessageToConversation = async (sessionId: string, message: MessageWithParts) => {
+    const result = await fetch('/api/conversation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sessionId, message: message }),
+      });
+      const data = await result.json();
+      console.log("Conversation API response:", data);
+  }
+ 
+    
+  const getConversationHistory = async (sessionId:string)=>{
+    const result = await fetch(`/api/conversation/${sessionId}`)
+    const data = await result.json()
+    return data
+  }
+  const handleSubmit = async (prompt: string) => {
     if (typeof prompt === "string" && prompt.trim() !== "") {
       sendMessage({ text: prompt });
+      await appendMessageToConversation(sessionId, { id: crypto.randomUUID(), role: "user", parts: [{ type: "text", text: prompt }] });
+      
     }
   };
+
   useEffect(() => {
+    if (session.status === "unauthenticated") {
+      redirect('/login');
+    } 
+
+    const data = getConversationHistory(sessionId)
+    data.then((data)=> setMessages(data.messages))
+  }, [session]);
+
+  useEffect(() => {
+
     if (!initialMessageProcessed) {
       const storedMessage = localStorage.getItem("initialMessage");
       if (storedMessage) {
         try {
           // Process the initial message using the centralized function
+         
           sendMessage({ text: storedMessage });
+          appendMessageToConversation(sessionId, { id: crypto.randomUUID(), role: "user", parts: [{ type: "text", text: storedMessage }] });
 
           // Clear the stored message after processing
           localStorage.removeItem("initialMessage");
@@ -83,6 +119,7 @@ const GeminiReasoningChat = (props: { params: Params }) => {
       }
       setInitialMessageProcessed(true);
     }
+
   }, [initialMessageProcessed, sessionId, sendMessage]);
 
   return (

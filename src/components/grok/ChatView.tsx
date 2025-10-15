@@ -6,12 +6,19 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { nanoid } from 'nanoid';
+import { useSession } from "next-auth/react";
 
 export function ChatView() {
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const handleSubmit = (prompt: string) => {
     if (typeof prompt === "string" && prompt.trim() !== "") {
+      // Check if user is authenticated before creating chat session
+      if (status === "unauthenticated") {
+        router.push("/login");
+        return;
+      }
       localStorage.setItem("initialMessage", prompt);
       const sessionId = nanoid();
       router.push(`/chat/${sessionId}`);

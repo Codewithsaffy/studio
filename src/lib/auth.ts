@@ -1,6 +1,5 @@
 import { NextAuthOptions, User as NextAuthUser } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import dbConnect from "@/lib/database/dbConnection";
 import User from "@/lib/database/models/User";
@@ -25,10 +24,6 @@ export const authOptions: NextAuthOptions = {
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        }),
-        GitHubProvider({
-            clientId: process.env.GITHUB_CLIENT_ID!,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET!,
         }),
         CredentialsProvider({
             name: "credentials",
@@ -80,7 +75,7 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async signIn({ user, account }) {
-            if (account?.provider === "google" || account?.provider === "github") {
+            if (account?.provider === "google") {
                 try {
                     await dbConnect();
 
@@ -89,7 +84,7 @@ export const authOptions: NextAuthOptions = {
                     if (existingUser) {
                         // Update existing user with OAuth info if needed
                         if (existingUser.provider !== account.provider) {
-                            existingUser.provider = account.provider as 'google' | 'github';
+                            existingUser.provider = account.provider as 'google';
                             existingUser.providerId = account.providerAccountId;
                             existingUser.image = user.image;
                             existingUser.isEmailVerified = true; // OAuth emails are pre-verified
@@ -115,9 +110,18 @@ export const authOptions: NextAuthOptions = {
             }
             return true;
         },
-        async jwt({ token, user }) {
+        async jwt({ token, user, account, profile }) {
+            // For credential users, user object comes from authorize and has MongoDB _id
             if (user) {
                 token.id = user.id;
+            }
+            // For Google users, ensure we have the database user's MongoDB _id
+            else if (token.email) {  // The token should have email after Google sign-in
+                await dbConnect();
+                const dbUser = await User.findOne({ email: token.email });
+                if (dbUser) {
+                    token.id = dbUser._id.toString();
+                }
             }
             return token;
         },

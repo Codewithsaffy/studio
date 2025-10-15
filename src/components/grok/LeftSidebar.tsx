@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -14,8 +13,6 @@ import {
   SidebarMenuItem,
   useSidebar,
   SidebarGroup,
-  SidebarGroupLabel,
-  SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
@@ -24,37 +21,47 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
 import {
-  Store,
   Building,
   Bus,
   Camera,
   Car,
-  ChevronDown,
-  History,
   Inbox,
   MessageSquare,
-  Search,
   Utensils,
   Book,
-  PanelLeft,
+  Menu,
+  Plus,
+  MessageCircle,
+  FolderKanban,
+  Grid3x3,
+  MoreHorizontal,
+  ChevronDown,
 } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { ChatContext } from "@/context/ChatContext";
-import { isToday, isYesterday, formatDistanceToNow } from "date-fns";
-import type { Conversation } from "@/types";
 import { AuthButtons } from "@/components/AuthButtons";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export function LeftSidebar() {
   const { state, isMobile, setOpenMobile } = useSidebar();
   const pathname = usePathname();
-  const [isHistoryOpen, setIsHistoryOpen] = useState(true);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isVendorsOpen, setIsVendorsOpen] = useState(false);
 
-  const { conversations, activeConversation, loadConversation } =
-    useContext(ChatContext);
+  interface Conversation {
+    sessionId: string;
+    title: string;
+    updatedAt: Date;
+    messageCount: number;
+    preview: string;
+    metadata?: {
+      guestCount?: number;
+      budget?: number;
+      weddingDate?: string;
+      location?: string;
+    };
+  }
 
   useEffect(() => {
     if (isMobile) {
@@ -62,41 +69,26 @@ export function LeftSidebar() {
     }
   }, [pathname, isMobile, setOpenMobile]);
 
-
-  const isCollapsed = state === "collapsed";
-
-  const groupConversationsByDate = (convos: Conversation[]) => {
-    const groups: { [key: string]: Conversation[] } = {
-      Today: [],
-      Yesterday: [],
-      "Previous 7 Days": [],
-      "Previous 30 Days": [],
-      Older: [],
-    };
-
-    convos.forEach((convo) => {
-      const date = new Date(convo.createdAt);
-      if (isToday(date)) {
-        groups.Today.push(convo);
-      } else if (isYesterday(date)) {
-        groups.Yesterday.push(convo);
-      } else {
-        const diffDays =
-          (new Date().getTime() - date.getTime()) / (1000 * 3600 * 24);
-        if (diffDays <= 7) {
-          groups["Previous 7 Days"].push(convo);
-        } else if (diffDays <= 30) {
-          groups["Previous 30 Days"].push(convo);
-        } else {
-          groups.Older.push(convo);
-        }
+  useEffect(() => {
+    async function loadConversations() {
+      try {
+        const response = await fetch('/api/conversation');
+        const { conversations } = await response.json();
+        setConversations(conversations);
+      } catch (error) {
+        console.error('Error loading conversations:', error);
+      } finally {
+        setLoading(false);
       }
-    });
+    }
 
-    return groups;
-  };
+    loadConversations();
+  }, []);
 
-  const groupedConversations = groupConversationsByDate(conversations);
+  const navItems = [
+    { href: "/", icon: MessageCircle, label: "Chats" },
+    { href: "/bookings", icon: FolderKanban, label: "Bookings" },
+  ];
 
   const vendorLinks = [
     { href: "/vendors/halls", icon: Building, label: "Halls" },
@@ -106,105 +98,109 @@ export function LeftSidebar() {
     { href: "/vendors/photography", icon: Camera, label: "Photographers" },
   ];
 
+  const isCollapsed = state === "collapsed";
+
   return (
-    <Sidebar>
-      <SidebarHeader>
-        <div
-          className={cn(
-            "flex items-center p-2",
-            isCollapsed && !isMobile ? "justify-center" : "justify-between"
-          )}
-        >
-          {(!isCollapsed || isMobile) && (
-             <Link href="/" className="flex items-center gap-2">
-              <h1 className="font-bold text-lg heading-gradient">MehfilAI</h1>
-            </Link>
-          )}
+    <Sidebar className="border-r border-border/40 bg-background">
+      <SidebarHeader className="border-b border-border/40 px-4 py-3">
+        <div className="flex items-center gap-3 justify-between">
+          <div className="flex items-center gap-3">
+            {!isCollapsed && (
+              <>
+                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
+                  <Menu className="h-4 w-4" />
+                </Button>
+                <Link href="/" className="flex items-center gap-2">
+                  <h1 className="font-semibold text-base">MehfilAI</h1>
+                </Link>
+              </>
+            )}
+          </div>
           {!isMobile && (
-            <SidebarTrigger>
-              <PanelLeft className={cn("h-5 w-5 transition-transform", isCollapsed && "rotate-180")}/>
-            </SidebarTrigger>
+            <SidebarTrigger className="h-8 w-8" />
           )}
         </div>
       </SidebarHeader>
-      <SidebarContent className="flex flex-col">
-        <div className="flex-shrink-0">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <Link href="/" className="w-full">
-                <SidebarMenuButton
-                  tooltip="Agent"
-                  isActive={
-                    pathname === "/" ||
-                    (pathname.startsWith("/chat") &&
-                      activeConversation === null)
-                  }
-                >
-                  <MessageSquare />
-                  <span className="group-data-[collapsible=icon]:hidden">
-                    Agent
-                  </span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <Link href="/inbox" className="w-full">
-                <SidebarMenuButton
-                  tooltip="Inbox"
-                  isActive={pathname.startsWith("/inbox")}
-                >
-                  <Inbox />
-                  <span className="group-data-[collapsible=icon]:hidden">
-                    Inbox
-                  </span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <Link href="/bookings" className="w-full">
-                <SidebarMenuButton
-                  tooltip="Bookings"
-                  isActive={pathname.startsWith("/bookings")}
-                >
-                  <Book />
-                  <span className="group-data-[collapsible=icon]:hidden">
-                    Bookings
-                  </span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
 
+      <SidebarContent className="flex flex-col px-2 py-3">
+        {/* New Chat Button */}
+        <div className="px-2 mb-4">
+          <Link href="/">
+            <Button 
+              variant="outline" 
+              className="w-full justify-start gap-2 bg-orange-500/10 border-orange-500/20 text-orange-500 hover:bg-orange-500/20 hover:text-orange-600 hover:border-orange-500/30"
+            >
+              <Plus className="h-4 w-4" />
+              {!isCollapsed && <span>New chat</span>}
+            </Button>
+          </Link>
+        </div>
+
+        {/* Main Navigation */}
+        <SidebarGroup className="mb-4">
+          <SidebarMenu className="space-y-1">
+            {navItems.map((item) => (
+              <SidebarMenuItem key={item.href}>
+                <Link href={item.href} className="w-full">
+                  <SidebarMenuButton
+                    isActive={pathname === item.href || pathname.startsWith(item.href + '/')}
+                    className={cn(
+                      "h-9 px-3 w-full justify-start gap-3 rounded-md transition-colors",
+                      pathname === item.href || pathname.startsWith(item.href + '/') 
+                        ? "bg-accent text-accent-foreground font-medium" 
+                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                    )}
+                    tooltip={item.label}
+                  >
+                    <item.icon className="h-4 w-4 shrink-0" />
+                    <span className="text-sm group-data-[collapsible=icon]:hidden">{item.label}</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            ))}
+            
+            {/* Vendors Collapsible */}
             <SidebarMenuItem>
               <Collapsible open={isVendorsOpen} onOpenChange={setIsVendorsOpen}>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
-                    className="w-full justify-between"
-                    isActive={pathname.startsWith("/vendors")}
+                    className={cn(
+                      "h-9 px-3 w-full justify-start gap-3 rounded-md transition-colors",
+                      pathname.startsWith("/vendors")
+                        ? "bg-accent text-accent-foreground font-medium"
+                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                    )}
                     tooltip="Vendors"
                   >
-                    <div className="flex items-center gap-3">
-                       <Link href="/vendors" className="flex items-center gap-3">
-                        <Building className="h-4 w-4" />
-                        <span className="group-data-[collapsible=icon]:hidden">
-                          Vendors
-                        </span>
-                      </Link>
-                    </div>
-                    <ChevronDown  className={cn("h-2 w-2 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isVendorsOpen && "rotate-180")} />
+                    <Building className="h-4 w-4 shrink-0" />
+                    <span className="text-sm flex-1 text-left group-data-[collapsible=icon]:hidden">
+                      Vendors
+                    </span>
+                    <ChevronDown 
+                      className={cn(
+                        "h-3 w-3 shrink-0 transition-transform group-data-[collapsible=icon]:hidden",
+                        isVendorsOpen && "rotate-180"
+                      )} 
+                    />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarGroup className="p-0 mt-1 group-data-[collapsible=icon]:hidden">
-                    <SidebarMenu>
+                    <SidebarMenu className="space-y-0.5">
                       {vendorLinks.map((link) => (
                         <SidebarMenuItem key={link.href}>
                           <Link href={link.href} className="w-full">
                             <SidebarMenuButton
                               isActive={pathname === link.href}
-                              className="h-9"
+                              className={cn(
+                                "h-9 px-3 pl-9 w-full justify-start gap-3 rounded-md transition-colors",
+                                pathname === link.href
+                                  ? "bg-accent text-accent-foreground font-medium"
+                                  : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                              )}
                             >
-                              <link.icon className="mr-3 h-4 w-4" />
-                              {link.label}
+                              <link.icon className="h-4 w-4 shrink-0" />
+                              <span className="text-sm">{link.label}</span>
                             </SidebarMenuButton>
                           </Link>
                         </SidebarMenuItem>
@@ -215,69 +211,58 @@ export function LeftSidebar() {
               </Collapsible>
             </SidebarMenuItem>
           </SidebarMenu>
-        </div>
+        </SidebarGroup>
 
+        {/* Recents Section */}
         <div className="flex-1 min-h-0">
+          {!isCollapsed && (
+            <div className="px-2 mb-2">
+              <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Recents
+              </h2>
+            </div>
+          )}
+          
           <ScrollArea className="h-full">
-            <SidebarMenuItem>
-              <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
-                <CollapsibleTrigger asChild>
-                   <SidebarMenuButton className="w-full justify-between" tooltip="History">
-                     <div className="flex items-center gap-3">
-                        <History size={16} />
-                        <span className="group-data-[collapsible=icon]:hidden flex-1 text-left">
-                          History
+            <SidebarMenu className="space-y-0.5">
+              {loading ? (
+                <div className="px-4 py-3 text-sm text-muted-foreground">
+                  {!isCollapsed && "Loading..."}
+                </div>
+              ) : conversations.length === 0 ? (
+                <div className="px-4 py-3 text-sm text-muted-foreground">
+                  {!isCollapsed && "No conversations yet"}
+                </div>
+              ) : (
+                conversations.map((conv) => (
+                  <SidebarMenuItem key={conv.sessionId}>
+                    <Link href={`/chat/${conv.sessionId}`} className="w-full group">
+                      <SidebarMenuButton
+                        isActive={pathname === `/chat/${conv.sessionId}`}
+                        className={cn(
+                          "h-9 px-3 w-full justify-between rounded-md transition-colors",
+                          pathname === `/chat/${conv.sessionId}`
+                            ? "bg-accent text-accent-foreground font-medium"
+                            : "text-foreground hover:bg-accent/50"
+                        )}
+                        tooltip={conv.title}
+                      >
+                        <span className="truncate text-sm flex-1 text-left group-data-[collapsible=icon]:hidden">
+                          {conv.title}
                         </span>
-                      </div>
-                    <ChevronDown  className={cn("h-2 w-2 ml-auto group-data-[collapsible=icon]:hidden transition-transform", isHistoryOpen && "rotate-180")} />
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarGroup className="p-0 mt-1 group-data-[collapsible=icon]:hidden">
-                    <SidebarMenu>
-                      {Object.entries(groupedConversations).map(
-                        ([groupName, convos]) =>
-                          convos.length > 0 ? (
-                            <div key={groupName} className="px-2">
-                              <SidebarGroupLabel>
-                                {groupName}
-                              </SidebarGroupLabel>
-                              <SidebarMenu>
-                                {convos.map((convo) => (
-                                  <SidebarMenuItem key={convo.id}>
-                                    <Link
-                                      href={`/chat/${convo.id}`}
-                                      className="w-full"
-                                    >
-                                      <SidebarMenuButton
-                                        isActive={
-                                          pathname === `/chat/${convo.id}`
-                                        }
-                                        className="h-9"
-                                      >
-                                        <span className="truncate">
-                                          {convo.title}
-                                        </span>
-                                      </SidebarMenuButton>
-                                    </Link>
-                                  </SidebarMenuItem>
-                                ))}
-                              </SidebarMenu>
-                            </div>
-                          ) : null
-                      )}
-                    </SidebarMenu>
-                  </SidebarGroup>
-                </CollapsibleContent>
-              </Collapsible>
-            </SidebarMenuItem>
+                        <MoreHorizontal className="h-4 w-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity group-data-[collapsible=icon]:hidden" />
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                ))
+              )}
+            </SidebarMenu>
           </ScrollArea>
         </div>
       </SidebarContent>
-      <SidebarFooter>
-        <div className="flex flex-col gap-2 p-2">
-          <AuthButtons />
-        </div>
+
+      <SidebarFooter className="border-t border-border/40 p-3">
+        <AuthButtons />
       </SidebarFooter>
     </Sidebar>
   );
