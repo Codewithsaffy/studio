@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   try {
     // Check if user is authenticated
     const session = await getServerSession(authOptions);
-    
+
     if (!session || !session.user) {
       return new Response(JSON.stringify({ error: 'Authentication required' }), {
         status: 401,
@@ -32,9 +32,14 @@ export async function POST(req: Request) {
       model: google('gemini-2.5-flash'),
       system: SYSTEM_PROMPT,
       stopWhen: stepCountIs(10),
-      // prompt: 'Explain the theory of relativity in simple terms.',
       messages: convertToModelMessages(messages),
       tools,
+      // Pass session to tool context
+      toolChoice: 'auto',
+      onFinish: async ({ response }) => {
+        // Optional: Log booking actions for audit trail
+        console.log('AI response completed');
+      },
       providerOptions: {
         google: {
           thinkingConfig: {
@@ -47,7 +52,7 @@ export async function POST(req: Request) {
 
     // Return UI message stream with reasoning enabled
     return result.toUIMessageStreamResponse({
-      sendReasoning: true, // This sends reasoning as separate parts
+      sendReasoning: true,
     });
   } catch (error) {
     console.error('Error in chat route:', error);
