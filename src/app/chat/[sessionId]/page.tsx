@@ -31,7 +31,7 @@ import {
   ToolOutput,
 } from "@/components/ai-elements/tool";
 import { CodeBlock } from "@/components/ai-elements/code-block";
-import { use, useContext, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState, useRef } from "react";
 import { dummyVendors, Vendor } from "@/lib/data";
 import VendorCard from "@/components/vendors/VendorCard";
 import VendorDetailModal from "@/components/vendors/VendorDetailModal";
@@ -43,27 +43,27 @@ import ChatContext from "@/context/Chatcontext";
 type Params = Promise<{ sessionId: string }>;
 
 const GeminiReasoningChat = (props: { params: Params }) => {
-  const session = useSession()
+  const session = useSession();
   const sessionId = use(props.params).sessionId;
-const { addOrUpdateChat, chats } = useContext(ChatContext);
+  const { addOrUpdateChat, chats } = useContext(ChatContext);
 
   const { messages, sendMessage, status, setMessages } = useChat({
-  onFinish: async (message) => {
-    const result = await appendMessageToConversation(sessionId, message.message);
-    
-    // Update sidebar after AI response
-    if (result.data) {
-      addOrUpdateChat({
-        sessionId: result.data.sessionId as string,
-        title: result.data.title as string,
-        updatedAt: new Date(result.data.updatedAt)
-      });
+    onFinish: async (message) => {
+      const result = await appendMessageToConversation(sessionId, message.message);
+      
+      if (result.data) {
+        addOrUpdateChat({
+          sessionId: result.data.sessionId as string,
+          title: result.data.title as string,
+          updatedAt: new Date(result.data.updatedAt)
+        });
+      }
     }
-  }
-});
-  const [initialMessageProcessed, setInitialMessageProcessed] = useState(false);
-  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+  });
 
+  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+  const [isHistoryLoaded, setIsHistoryLoaded] = useState(false);
+  const initialMessageProcessedRef = useRef(false);
 
   function extractProductIds(text: string): string[] {
     if (!text) return [];
@@ -71,71 +71,76 @@ const { addOrUpdateChat, chats } = useContext(ChatContext);
     const m = text.match(re);
     if (!m) return [];
     return m[1]
-      .split(/[,\s]+/) // split by comma or spaces
+      .split(/[,\s]+/)
       .map((s) => s.trim())
       .filter(Boolean);
   }
 
-   const appendMessageToConversation = async (sessionId: string, message: MessageWithParts) => {
+  const appendMessageToConversation = async (sessionId: string, message: MessageWithParts) => {
     const result = await fetch('/api/conversation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ sessionId, message: message }),
-      });
-      const data = await result.json();
-      return data
-  }
- 
-    
-  const getConversationHistory = async (sessionId:string)=>{
-    const result = await fetch(`/api/conversation/${sessionId}`)
-    const data = await result.json()
-    return data
-  }
-const handleSubmit = async (prompt: string) => {
-  if (typeof prompt === "string" && prompt.trim() !== "") {
-    sendMessage({ text: prompt });
-    
-    const result = await appendMessageToConversation(sessionId, { 
-      id: crypto.randomUUID(), 
-      role: "user", 
-      parts: [{ type: "text", text: prompt }] 
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ sessionId, message: message }),
     });
+    const data = await result.json();
+    return data;
+  };
     
-    // Update the chat in sidebar after each message
-    if (result.data) {
-      addOrUpdateChat({
-        sessionId: result.data.sessionId as string,
-        title: result.data.title as string,
-        updatedAt: new Date(result.data.updatedAt)
-      });
-    }
-  }
-}
+  const getConversationHistory = async (sessionId: string) => {
+    const result = await fetch(`/api/conversation/${sessionId}`);
+    const data = await result.json();
+    return data;
+  };
 
+  const handleSubmit = async (prompt: string) => {
+    if (typeof prompt === "string" && prompt.trim() !== "") {
+      sendMessage({ text: prompt });
+      
+      const result = await appendMessageToConversation(sessionId, { 
+        id: crypto.randomUUID(), 
+        role: "user", 
+        parts: [{ type: "text", text: prompt }] 
+      });
+      
+      if (result.data) {
+        addOrUpdateChat({
+          sessionId: result.data.sessionId as string,
+          title: result.data.title as string,
+          updatedAt: new Date(result.data.updatedAt)
+        });
+      }
+    }
+  };
+
+  // First effect: Load conversation history
   useEffect(() => {
-    if (session.status === "unauthenticated" ) {
-      redirect('/login');
-    } 
 
     const loadHistory = async () => {
       try {
         const data = await getConversationHistory(sessionId);
-        if (data.messages && Array.isArray(data.messages)) {
+        if (data.messages && Array.isArray(data.messages) && data.messages.length > 0) {
           setMessages(data.messages);
         }
       } catch (error) {
         console.error("Error loading conversation history:", error);
+      } finally {
+        setIsHistoryLoaded(true);
       }
     };
     
-    loadHistory();
-  }, [session]);
+    if (session.status === "authenticated") {
+      loadHistory();
+    }
+  }, [session.status, sessionId]);
 
-useEffect(() => {
-  if (!initialMessageProcessed) {
+  // Second effect: Process initial message only after history is loaded
+  useEffect(() => {
+    if (!isHistoryLoaded || initialMessageProcessedRef.current) {
+      return;
+    }
+
     const storedMessage = localStorage.getItem("initialMessage");
     if (storedMessage) {
       try {
@@ -148,12 +153,13 @@ useEffect(() => {
         }).then((payload) => {
           const data = payload.data;
           
-          // Use the addOrUpdateChat function from context
-          addOrUpdateChat({
-            sessionId: data.sessionId as string,
-            title: data.title as string,
-            updatedAt: new Date(data.updatedAt)
-          });
+          if (data) {
+            addOrUpdateChat({
+              sessionId: data.sessionId as string,
+              title: data.title as string,
+              updatedAt: new Date(data.updatedAt)
+            });
+          }
         });
 
         localStorage.removeItem("initialMessage");
@@ -161,19 +167,18 @@ useEffect(() => {
         console.error("Error parsing stored message:", error);
       }
     }
-    setInitialMessageProcessed(true);
-  }
-}, [initialMessageProcessed, sessionId, sendMessage]);
-
+    
+    initialMessageProcessedRef.current = true;
+  }, [isHistoryLoaded, sessionId, sendMessage]);
 
   return (
-    <main className="flex flex-col h-full w-full overflow-hidden relative  custom-scrollbar-overlay with-scroll-padding">
+    <main className="flex flex-col h-full w-full overflow-hidden relative custom-scrollbar-overlay with-scroll-padding">
       <div className="w-full overflow-auto flex-1">
-        <Conversation className=" h-full ">
-          <ConversationContent className=" max-w-4xl w-full mx-auto">
+        <Conversation className="h-full">
+          <ConversationContent className="max-w-4xl w-full mx-auto">
             {messages.map((message) => (
               <div key={message.id}>
-                <Message from={message.role} key={message.id}>
+                <Message from={message.role}>
                   <MessageContent
                     className={`${
                       message.role === "user" ? "max-w-xl" : "max-w-full"
@@ -193,10 +198,7 @@ useEffect(() => {
                           return (
                             <div key={`${message.id}-${i}`}>
                               {cleanedText ? (
-                                <Response
-                                  className=""
-                                  key={`${message.id}-${i}`}
-                                >
+                                <Response className="">
                                   {cleanedText}
                                 </Response>
                               ) : null}
@@ -205,7 +207,7 @@ useEffect(() => {
                                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
                                   {vendors.map((vendor) => (
                                     <VendorCard
-                                    key={vendor.id}
+                                      key={vendor.id}
                                       vendor={vendor}
                                       onViewDetails={() =>
                                         setSelectedVendor(vendor)
@@ -249,30 +251,6 @@ useEffect(() => {
                         case "tool-checkVendorAvailability":
                         case "tool-calculateWeddingBudget":
                         case "tool-createBooking":
-
-                        // return (
-                        //   <Tool key={part.toolCallId} defaultOpen={false}  className="max-w-[325px]">
-                        //     <ToolHeader
-                        //       type="tool-getAvailableHalls"
-                        //       state={part.state}
-
-                        //     />
-                        //     <ToolContent>
-                        //       <ToolInput input={part.input} />
-                        //       {part.state === "output-available" && (
-                        //         <ToolOutput
-                        //           errorText={part.errorText}
-                        //           output={
-                        //             <CodeBlock
-                        //               code={JSON.stringify(part.output)}
-                        //               language="json"
-                        //             />
-                        //           }
-                        //         />
-                        //       )}
-                        //     </ToolContent>
-                        //   </Tool>
-                        // );
                         case "tool-getAvailableCatering":
                           return (
                             <Tool
@@ -334,7 +312,6 @@ useEffect(() => {
         </Conversation>
       </div>
 
-      {/* Input Container - Fixed at bottom */}
       <div className="w-full max-w-4xl px-4 py-4 bg-background mx-auto">
         <PromptInput onSubmit={handleSubmit} />
       </div>
