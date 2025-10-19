@@ -9,12 +9,12 @@ import {
 } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { ArrowUp, Mic } from "lucide-react";
+import { ArrowUp, LoaderCircle, Mic } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 
 
-export function PromptInput({ onSubmit }: { onSubmit: (prompt: string) => void }) {
+export function PromptInput({ onSubmit, loading }: { onSubmit: (prompt: string) => void, loading?:boolean }) {
   const [prompt, setPrompt] = useState("");
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
@@ -115,7 +115,11 @@ export function PromptInput({ onSubmit }: { onSubmit: (prompt: string) => void }
               {/* {isSending ? ( */}
                 {/* <LoaderCircle className="h-5 w-5 animate-spin" /> */}
               {/* ) : ( */}
+              {
+                loading ? <LoaderCircle className="animate-spin"/> : 
                 <ArrowUp className="h-5 w-5" />
+
+              }
               {/* )} */}
             </Button>
           )}

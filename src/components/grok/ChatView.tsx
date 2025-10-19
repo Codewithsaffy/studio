@@ -7,13 +7,17 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { nanoid } from 'nanoid';
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 export function ChatView() {
   const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(false)
   const router = useRouter();
 
   const handleSubmit = (prompt: string) => {
-    if (typeof prompt === "string" && prompt.trim() !== "") {
+    setLoading(true)
+    try {
+      if (typeof prompt === "string" && prompt.trim() !== "") {
       // Check if user is authenticated before creating chat session
       if (status === "unauthenticated") {
         router.push("/login");
@@ -23,6 +27,15 @@ export function ChatView() {
       const sessionId = nanoid();
       router.push(`/chat/${sessionId}`);
     }
+    } catch (error) {
+      console.log(error)
+      
+    }finally{
+    // setLoading(false)
+     
+    }
+
+    
   };
 
   return (
@@ -42,7 +55,7 @@ export function ChatView() {
                 onSubmit={handleSubmit}
               />
             </div>
-            <div className="flex  flex-wrap justify-center gap-2 w-full sm:w-auto">
+            <div className="flex flex-wrap justify-center gap-2 w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="sm"

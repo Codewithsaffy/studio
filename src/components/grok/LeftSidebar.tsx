@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -42,27 +42,19 @@ import { AuthButtons } from "@/components/AuthButtons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import ChatContext from "@/context/Chatcontext";
 
+export interface Conversation {
+    sessionId: string;
+    title: string;
+  }
 export function LeftSidebar() {
   const { state, isMobile, setOpenMobile } = useSidebar();
   const pathname = usePathname();
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [loading, setLoading] = useState(true);
   const [isVendorsOpen, setIsVendorsOpen] = useState(false);
+  const {setChats, chats, loading} = useContext(ChatContext)
 
-  interface Conversation {
-    sessionId: string;
-    title: string;
-    updatedAt: Date;
-    messageCount: number;
-    preview: string;
-    metadata?: {
-      guestCount?: number;
-      budget?: number;
-      weddingDate?: string;
-      location?: string;
-    };
-  }
+  
 
   useEffect(() => {
     if (isMobile) {
@@ -70,21 +62,24 @@ export function LeftSidebar() {
     }
   }, [pathname, isMobile, setOpenMobile]);
 
-  useEffect(() => {
-    async function loadConversations() {
-      try {
-        const response = await fetch('/api/conversation');
-        const { conversations } = await response.json();
-        setConversations(conversations);
-      } catch (error) {
-        console.error('Error loading conversations:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
+  // useEffect(() => {
+  //   async function loadConversations() {
+  //     try {
+  //       const response = await fetch('/api/conversation');
+  //       const { conversations } = await response.json();
+  //       setChats(conversations)
 
-    loadConversations();
-  }, []);
+  //       // setConversations(conversations);
+  //     } catch (error) {
+  //       console.error('Error loading conversations:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   loadConversations();
+  // }, []);
+
 
   const navItems = [
     { href: "/", icon: MessageCircle, label: "Chats" },
@@ -228,12 +223,12 @@ export function LeftSidebar() {
                 <div className="px-4 py-3 text-sm text-muted-foreground">
                   {!isCollapsed && "Loading..."}
                 </div>
-              ) : conversations.length === 0 ? (
+              ) : chats.length === 0 ? (
                 <div className="px-4 py-3 text-sm text-muted-foreground">
                   {!isCollapsed && "No conversations yet"}
                 </div>
               ) : (
-                conversations.map((conv) => (
+                chats.map((conv) => (
                   <SidebarMenuItem key={conv.sessionId}>
                     <Link href={`/chat/${conv.sessionId}`} className="w-full group">
                       <SidebarMenuButton

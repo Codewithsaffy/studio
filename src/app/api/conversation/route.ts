@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const { sessionId, message } = await req.json();
 
   const data = await appendMessage({sessionId, userId, message});
-  return NextResponse.json({ sessionId, userId, message });
+  return NextResponse.json({ data });
 }
 
 

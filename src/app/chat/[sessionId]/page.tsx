@@ -31,25 +31,36 @@ import {
   ToolOutput,
 } from "@/components/ai-elements/tool";
 import { CodeBlock } from "@/components/ai-elements/code-block";
-import { use, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { dummyVendors, Vendor } from "@/lib/data";
 import VendorCard from "@/components/vendors/VendorCard";
 import VendorDetailModal from "@/components/vendors/VendorDetailModal";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { MessageWithParts } from "@/lib/database/chatHistory";
+import ChatContext from "@/context/Chatcontext";
 
 type Params = Promise<{ sessionId: string }>;
 
 const GeminiReasoningChat = (props: { params: Params }) => {
   const session = useSession()
   const sessionId = use(props.params).sessionId;
+const { addOrUpdateChat, chats } = useContext(ChatContext);
 
   const { messages, sendMessage, status, setMessages } = useChat({
-    onFinish:(message)=>{
-      appendMessageToConversation(sessionId, message.message)
+  onFinish: async (message) => {
+    const result = await appendMessageToConversation(sessionId, message.message);
+    
+    // Update sidebar after AI response
+    if (result.data) {
+      addOrUpdateChat({
+        sessionId: result.data.sessionId as string,
+        title: result.data.title as string,
+        updatedAt: new Date(result.data.updatedAt)
+      });
     }
-  });
+  }
+});
   const [initialMessageProcessed, setInitialMessageProcessed] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
 
@@ -74,7 +85,7 @@ const GeminiReasoningChat = (props: { params: Params }) => {
         body: JSON.stringify({ sessionId, message: message }),
       });
       const data = await result.json();
-      console.log("Conversation API response:", data);
+      return data
   }
  
     
@@ -83,43 +94,77 @@ const GeminiReasoningChat = (props: { params: Params }) => {
     const data = await result.json()
     return data
   }
-  const handleSubmit = async (prompt: string) => {
-    if (typeof prompt === "string" && prompt.trim() !== "") {
-      sendMessage({ text: prompt });
-      await appendMessageToConversation(sessionId, { id: crypto.randomUUID(), role: "user", parts: [{ type: "text", text: prompt }] });
-      
+const handleSubmit = async (prompt: string) => {
+  if (typeof prompt === "string" && prompt.trim() !== "") {
+    sendMessage({ text: prompt });
+    
+    const result = await appendMessageToConversation(sessionId, { 
+      id: crypto.randomUUID(), 
+      role: "user", 
+      parts: [{ type: "text", text: prompt }] 
+    });
+    
+    // Update the chat in sidebar after each message
+    if (result.data) {
+      addOrUpdateChat({
+        sessionId: result.data.sessionId as string,
+        title: result.data.title as string,
+        updatedAt: new Date(result.data.updatedAt)
+      });
     }
-  };
+  }
+}
 
   useEffect(() => {
-    if (session.status === "unauthenticated") {
+    if (session.status === "unauthenticated" ) {
       redirect('/login');
     } 
 
-    const data = getConversationHistory(sessionId)
-    data.then((data)=> setMessages(data.messages))
+    const loadHistory = async () => {
+      try {
+        const data = await getConversationHistory(sessionId);
+        if (data.messages && Array.isArray(data.messages)) {
+          setMessages(data.messages);
+        }
+      } catch (error) {
+        console.error("Error loading conversation history:", error);
+      }
+    };
+    
+    loadHistory();
   }, [session]);
 
-  useEffect(() => {
-    if (!initialMessageProcessed) {
-      const storedMessage = localStorage.getItem("initialMessage");
-      if (storedMessage) {
-        try {
-          // Process the initial message using the centralized function
-         
-          sendMessage({ text: storedMessage });
-          appendMessageToConversation(sessionId, { id: crypto.randomUUID(), role: "user", parts: [{ type: "text", text: storedMessage }] });
+useEffect(() => {
+  if (!initialMessageProcessed) {
+    const storedMessage = localStorage.getItem("initialMessage");
+    if (storedMessage) {
+      try {
+        sendMessage({ text: storedMessage });
+        
+        appendMessageToConversation(sessionId, { 
+          id: crypto.randomUUID(), 
+          role: "user", 
+          parts: [{ type: "text", text: storedMessage }] 
+        }).then((payload) => {
+          const data = payload.data;
+          
+          // Use the addOrUpdateChat function from context
+          addOrUpdateChat({
+            sessionId: data.sessionId as string,
+            title: data.title as string,
+            updatedAt: new Date(data.updatedAt)
+          });
+        });
 
-          // Clear the stored message after processing
-          localStorage.removeItem("initialMessage");
-        } catch (error) {
-          console.error("Error parsing stored message:", error);
-        }
+        localStorage.removeItem("initialMessage");
+      } catch (error) {
+        console.error("Error parsing stored message:", error);
       }
-      setInitialMessageProcessed(true);
     }
+    setInitialMessageProcessed(true);
+  }
+}, [initialMessageProcessed, sessionId, sendMessage]);
 
-  }, [initialMessageProcessed, sessionId, sendMessage, ]);
 
   return (
     <main className="flex flex-col h-full w-full overflow-hidden relative  custom-scrollbar-overlay with-scroll-padding">

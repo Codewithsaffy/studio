@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from '@/components/theme-provider';
 import { NextAuthProvider } from '@/components/NextAuthProvider';
 import { MainLayout } from '@/components/MainLayout';
-import { ChatProvider } from '@/context/ChatProvider';
+import ChatContextProvider from '@/context/ChatContextProvider';
 
 export const metadata: Metadata = {
   title: 'MehfilAI',
@@ -31,11 +31,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <ChatProvider>
+            <ChatContextProvider>
               <MainLayout>
                 {children}
               </MainLayout>
-            </ChatProvider>
+            </ChatContextProvider>
+
             <Toaster />
           </ThemeProvider>
         </NextAuthProvider>
